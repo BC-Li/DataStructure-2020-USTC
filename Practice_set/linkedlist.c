@@ -14,6 +14,33 @@ typedef struct Node{
 } Node;
 typedef struct Node* LinkList;
 
+void CreateListHead(LinkList *L,int n){     //inserting head 
+    LinkList p;
+    int i;
+
+    srand(time(0));
+
+    *L = (LinkList)malloc(sizeof(Node));
+    (*L)->Next = NULL;
+    
+    for(i = 0;i<n;i++){
+        p = (LinkList)malloc(sizeof(Node));
+        p->data = rand()%100+1;
+        p->Next = (*L)->Next;
+        (*L)->Next =p; 
+    }
+}
+
+void CreateListTail(LinkList *L, int n){
+    LinkList p,r;
+    int i;
+
+    srand(time(0));
+    *L = (LinkList)malloc(sizeof(Node));
+    r = *L;
+
+    for(i = 0;)
+}
 int ListInsert(LinkList *L, int i, Elemtype e){
     int j;
     LinkList p,s;
@@ -57,4 +84,20 @@ int ListDelete(LinkList *L,int i, Elemtype *e){
     free(q);
     
     return TRUE;
+}
+
+int ClearList(LinkList *L){
+    LinkList p,q;
+
+    p= (*L)->Next;
+
+    while(p){
+        q = p->Next;
+        free(p);
+        p=q;
+    }
+
+    (*L)->Next = NULL;
+    return TRUE;
+
 }
