@@ -98,6 +98,6 @@ int ClearList(LinkList *L){
     }
 
     (*L)->Next = NULL;
-    return TRUE;
+    return TRUE; \\Linux Git Test
 
 }
