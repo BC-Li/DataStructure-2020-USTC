@@ -15,6 +15,8 @@ typedef struct LinkedList{
     struct LinkedList *next; 
 }SqList;
 
+int PrintList(SqList *A);
+
 int ListInit(SqList *L){
     SqList *p = NULL, *end = NULL;
     int coefficient;
@@ -34,6 +36,16 @@ int ListInit(SqList *L){
     }
     end->next = NULL;
     return OK;
+}
+
+int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing the outputs.
+    L = (SqList *)malloc(sizeof(SqList));
+    if(!L){
+        return ERROR;
+    }
+    L->data = 0;
+    L->index = 0;
+    L->next = NULL;
 }
 
 int ListInsert(float e, int n, SqList *L ){
@@ -109,32 +121,45 @@ int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
 }
 // WIP features
 
-// int ListMultiply(SqList *A, SqList *B){
-// } 
+int ListMultiply(SqList *A, SqList *B, SqList *MultiplyTemp, SqList *Multiply_B, SqList *Output){
+    OutputListInit(MultiplyTemp);
+    
+    SqList *searcher_A = A, *searcher_B = B;
+    while(searcher_A!=NULL){
+        while(searcher_B!=NULL){
+            int MultiplyedData = searcher_A->data * searcher_B->data;
+            int MultipliedIndex = searcher_A->index + searcher_B->index;
+            ListInsert(MultiplyedData,MultipliedIndex,MultiplyTemp);
+        }
+        ListAddition(MultiplyTemp,Output,Output);
+    }
+    PrintList(Output);
+    return OK;
+} 
 
 //  Standard Output and Other Features
 
-int PrintList(SqList *A){
-    SqList *Traveler = A->next;
-    if(Traveler->next == NULL){
+int PrintList(SqList *A){       // reverse print using recursive func
+    PrintList(A->next);
+    if(A->next == NULL){
         return ERROR;   // the list is empty or something else
     }
 
     // Head of the polynomial, add some special judgements 
-    if(Traveler->data > 0){     
-        printf("%fx^%d",Traveler->data,Traveler->index);
+    if(A->data > 0){     
+        printf("%fx^%d",A->data,A->index);
     }
-    if(Traveler->data > 0){     
-        printf("-%fx^%d",Traveler->data,Traveler->index);
+    if(A->data > 0){     
+        printf("-%fx^%d",A->data,A->index);
     }
     
     // Print the remaining factors
-    while(Traveler != NULL){
-        if(Traveler->data > 0){
-            printf("+%fx^%d",Traveler->data,Traveler->index);
+    while(A != NULL){
+        if(A->data > 0){
+            printf("+%fx^%d",A->data,A->index);
         } 
-        if(Traveler->data < 0){
-            printf("%fx^%d",Traveler->data,Traveler->index);
+        if(A->data < 0){
+            printf("%fx^%d",A->data,A->index);
         }
     }
 
@@ -164,8 +189,20 @@ int CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (give
     return OK;
 }
 
-void welcome()
-{
+int ListSort(SqList *A){
+    SqList *p,*q;
+    p = A;
+    q = p->next;
+    while(p!=NULL){
+        while(q!=NULL){
+            if(q->index>p->index){
+                 
+            }
+        }
+    }
+}
+
+void welcome(){
 	printf ("\n");
 	printf ("\n");
 	printf ("\n");
@@ -173,7 +210,7 @@ void welcome()
     printf("***************************View https://github.com/BC-Li for more info.*********************************");
     printf("\n");
     printf("\n");
-    printf("********************************    1.Addition      ***************************************\n");
+    printf("********************************    1.INIT      ***************************************\n");
     printf("********************************    2.Subtraction      ***************************************\n");
     printf("********************************    3.Multiply      ***************************************\n");
     printf("********************************    4.Display  ***************************************\n");
@@ -192,20 +229,47 @@ int main()
     do
     {
         welcome();
-    printf("*******************************    Input your command please~ 0-5：  **************************************\n");
+    printf("*******************************    Input your command  0-5:  **************************************\n");
         scanf("%s",choice);
         choice_1=choice[0]-48;
         printf("\n");
         switch(choice_1)
        {
-            case 1:head_1=add(head_1,tail_1,pnew_1);
-			       
-            break;
-            case 2:search_name(head_1);
-            break;
-            case 3:listdelete(head_1);
-            break;
-            case 4:Display_Linkedlist(head_1);
+            case 1:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                break;
+            }
+            case 2:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                SqList AdditionResult;
+                ListAddition(&A,&B,&AdditionResult);
+                PrintList(&AdditionResult);
+                break;
+            }
+            case 3:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                SqList SubtractionResult;
+                ListSubtraction(&A,&B,&SubtractionResult);
+                PrintList(&SubtractionResult);
+                break;
+            }
+            case 4:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                SqList MultiplyResult;
+                ListMultiply(&A,&B,&MultiplyResult);
+                PrintList(&MultiplyResult);
+                break;
+            }
+            
+            case 5:
             break;
             case 0:
     printf("********************************         Bye~      ***************************************\n");
