@@ -1,4 +1,4 @@
-// This is the lab 1: Unary sparse polynomial calculator  for DataStructure 2020 Fall by Bocheng Li.
+// This is the lab 1: Unary sparse polynomial calculator for DataStructure 2020 Fall by Bocheng Li.
 // View my GitHub: https://github.com/BC-Li for more info. 
 
 // include libraries
@@ -112,6 +112,9 @@ int PrintList(SqList *A){
         return ERROR;   // the list is empty or something else
     }
     while(Traveler != NULL){
+        if(Traveler->data>0){
+        printf("+%fx^%d",Traveler->data,Traveler->index);
+        } 
         printf("%fx^%d",Traveler->data,Traveler->index);
     }
     return OK;
