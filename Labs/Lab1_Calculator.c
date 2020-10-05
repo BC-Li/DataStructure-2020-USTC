@@ -132,13 +132,15 @@ int CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (give
     float Value = 0;
     SqList *Traveler = A;
     if(Traveler->next == NULL){
-        return ERROR;
+        return ERROR;   // the list is empty or something else
     }
     while(Traveler != NULL){
-
+        Value = Value + Traveler->data*(pow(x,Traveler->data));
     }
-
+    return OK;
 }
+
+
 
 
 
