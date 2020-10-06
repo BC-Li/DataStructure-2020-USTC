@@ -162,7 +162,8 @@ int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
     return OK;
 }
 
-int ListMultiply(SqList *A, SqList *B, SqList *MultiplyTemp, SqList *Multiply_B, SqList *Output){
+int ListMultiply(SqList *A, SqList *B, SqList *Output){
+    SqList *MultiplyTemp = NULL;
     OutputListInit(MultiplyTemp);
     OutputListInit(Output);
     SqList *searcher_A = A, *searcher_B = B;
@@ -194,7 +195,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
         printf("%fx^%d",A->data,A->index);
     }
     if(A->data < 0){     
-        printf("-%fx^%d",A->data,A->index);
+        printf("%fx^%d",A->data,A->index);
     }
     
     // Print the remaining factors
@@ -257,13 +258,25 @@ void welcome(){
 }
 int main() 
 { 
+    // SqList A,B,Addition;
+    // ListInit(&A);
+    // ListInit(&B);
+    // OutputListInit(&Addition);
+    // ListAddition(&A,&B,&Addition);
+    // PrintList(&Addition);
+    // return 0;
     SqList A,B,Addition;
     ListInit(&A);
     ListInit(&B);
     OutputListInit(&Addition);
-    ListAddition(&A,&B,&Addition);
+    ListSubtraction(&A,&B,&Addition);
     PrintList(&Addition);
     return 0;
+
+
+
+
+
     // char  choice[100];
     // int choice_1;
     // char  yes_no;
