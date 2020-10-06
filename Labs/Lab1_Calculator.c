@@ -55,14 +55,20 @@ int ListInit(SqList *L){
 }
 
 int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing the outputs.
+    SqList *p = NULL, *end = NULL;
+    end = L;
     L = (SqList *)malloc(sizeof(SqList));
     if(!L){
         return ERROR;
     }
-    L->data = 0;
-    L->index = 0;
-    L->note = 0; //test
     L->next = NULL;
+    p = (SqList *)malloc(sizeof(SqList));
+    p->data = 0;
+    p->index = 0;
+    p->note = 0;
+    end->next = p;
+    end = p;
+    end->next = NULL;
     return OK;
 }
 
@@ -98,31 +104,31 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
     Addition->next = NULL;
     // the first factor
     
-    if((searcher_A!=NULL)&&(searcher_B!=NULL)){
-        if(searcher_A->index == n){
-            e = e+searcher_A->data;
-            searcher_A = searcher_A ->next;
-        }
+    // if((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
+    //     if(searcher_A->index == n){
+    //         e = e+searcher_A->data;
+    //         searcher_A = searcher_A ->next;
+    //     }
 
-        if(searcher_B->index == n){
-            e = e+searcher_B->data;
-            searcher_B = searcher_B ->next;
-        }
+    //     if(searcher_B->index == n){
+    //         e = e+searcher_B->data;
+    //         searcher_B = searcher_B ->next;
+    //     }
 
-        ListInsert(e,n,Addition);
-        e = 0;
-        n++;
+    //     ListInsert(e,n,Addition);
+    //     e = 0;
+    //     n++;
         
-    }
+    // }
     
-    while((searcher_A!=NULL)&&(searcher_B!=NULL)){
+    while((searcher_A!=NULL)||(searcher_B!=NULL)){
 
-        if(searcher_A->index == n){
+        if(searcher_A!=NULL && searcher_A->index == n){
             e = e+searcher_A->data;
             searcher_A = searcher_A ->next;
         }
 
-        if(searcher_B->index == n){
+        if(searcher_B!=NULL && searcher_B->index == n){
             e = e+searcher_B->data;
             searcher_B = searcher_B ->next;
         }
@@ -179,23 +185,41 @@ int DetectEmptyList(SqList *A){
     }
     return -1;
 }
+int SearchList(float x,float y, SqList *L){
+    SqList *p = L;
+    while(p!=NULL){
+        if(y == p->index){
+            p->data = p->data + x;
+            return 1;
+        }
+        p = p->next;
+    }
+    return 0;
+}
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(MultiplyTemp);
     // OutputListInit(Output);
-    SqList Temp_1,Temp_2;
-    OutputListInit(&Temp_1);
-    OutputListInit(&Temp_2);
+    SqList Temp_1;
+    MultiplyTemp->next = NULL;
+    Temp_1.data = 0;
+    Temp_1.index = 0;
+    Temp_1.note = 0; //test
+    Temp_1.next = NULL;
     SqList *searcher_A = A->next, *searcher_B = B->next;
     while(searcher_A!=NULL){
         while(searcher_B!=NULL){
             int MultiplyedData = searcher_A->data * searcher_B->data;
             int MultipliedIndex = searcher_A->index + searcher_B->index;
-            ListInsert(MultiplyedData,MultipliedIndex,MultiplyTemp);
+
+            if(SearchList(MultiplyedData,MultipliedIndex,MultiplyTemp)==0){
+                ListInsert(MultiplyedData,MultipliedIndex,MultiplyTemp);
+            }
             searcher_B = searcher_B->next;
         }
         ListAddition(MultiplyTemp,Output,&Temp_1);
-        Output = &Temp_1;
         searcher_A = searcher_A->next;
+        searcher_B = B->next;
+        Output = &Temp_1;
     }
     PrintList(Output);
     return OK;
@@ -204,11 +228,11 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
 //  Standard Output and Other Features
 
 int PrintList(SqList *A){       // reverse print using recursive func
-    if(DetectEmptyList(A) == -1){
-        printf("0,this is an empty list");
-        return OK;
-    }
-    else{
+    // if(DetectEmptyList(A) == -1){
+    //     printf("0,this is an empty list");
+    //     return OK;
+    // }
+    // else{
         
         if(A!=NULL){
     PrintList(A->next);
@@ -237,7 +261,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
         return ERROR;
     }
    
-    }
+    // }
     
 }
 
@@ -304,7 +328,6 @@ int main()
     OutputListInit(&Addition);
     OutputListInit(&Multiply);
     ListMultiply(&A,&B,&Addition,&Multiply);
-    PrintList(&Addition);
     return 0;
 
 
