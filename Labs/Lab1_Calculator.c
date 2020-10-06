@@ -17,6 +17,7 @@ typedef struct LinkedList{
 }SqList;
 
 int PrintList(SqList *A);
+int DetectEmptyList(SqList *A);
 
 int ListInit(SqList *L){
     SqList *p = NULL, *end = NULL;
@@ -142,7 +143,7 @@ int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
     SqList *searcher_A = A,*searcher_B = B;
     int n = 0, e = 0;
     Substraction->next = NULL;
-    while((searcher_A!=NULL)&&(searcher_B!=NULL)){
+    while((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
 
         if(searcher_A->index == n){
             e = e+searcher_A->data;
@@ -161,7 +162,21 @@ int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
     
     return OK;
 }
-
+int DetectEmptyList(SqList *A){
+    SqList *Searcher;
+    Searcher = A;
+    if(Searcher == NULL){
+        return -1;
+    }
+    Searcher = Searcher->next;
+    while(Searcher!=NULL){
+        if(Searcher->data > 0.0000000001){
+            return 1;
+        }
+        Searcher = Searcher -> next;
+    }
+    return -1;
+}
 int ListMultiply(SqList *A, SqList *B, SqList *Output){
     SqList *MultiplyTemp = NULL;
     OutputListInit(MultiplyTemp);
@@ -182,18 +197,27 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output){
 //  Standard Output and Other Features
 
 int PrintList(SqList *A){       // reverse print using recursive func
-    if(A!=NULL){
+    if(DetectEmptyList(A) == -1){
+        printf("0,this is an empty list");
+        return OK;
+    }
+    else{
+        
+        if(A!=NULL){
     PrintList(A->next);
     if(A == NULL){
         return ERROR;   // the list is empty or something else
     }
+
     // Head of the polynomial, add some special judgements 
-    if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 0){  // avoid invalid judgement of zero regarding to float type  
-        printf("+%fx^%d",A->data,A->index);
-    }
     if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 1){  // note = 1 means the first factor in the polynomial
         printf("%fx^%d",A->data,A->index);
     }
+
+    if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 0){  // avoid invalid judgement of zero regarding to float type  
+        printf("+%fx^%d",A->data,A->index);
+    }
+
     if(A->data < 0){     
         printf("%fx^%d",A->data,A->index);
     }
@@ -206,6 +230,8 @@ int PrintList(SqList *A){       // reverse print using recursive func
         return ERROR;
     }
    
+    }
+    
 }
 
 int DerivativeFunction(SqList *A){   // F'(x)
