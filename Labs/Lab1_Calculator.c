@@ -196,6 +196,11 @@ int SearchList(float x,float y, SqList *L){
     }
     return 0;
 }
+int CopyList(SqList *A, SqList *B){
+    // ListFree(B);
+
+    return OK;
+}
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(MultiplyTemp);
     // OutputListInit(Output);
@@ -219,8 +224,20 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
         ListAddition(MultiplyTemp,Output,&Temp_1);
         searcher_A = searcher_A->next;
         searcher_B = B->next;
-        Output = &Temp_1;
+        // CopyList(&Temp_1,Output);
+        Output->next = NULL;
+        SqList *p;
+        for(p = Temp_1.next;p!=NULL;p = p->next){
+            ListInsert(p->data,p->index,Output);
+        }
+        Temp_1.next = NULL;
     }
+    SqList *Traveler = Output->next; // make the first factor of Multiply's note 1
+    while(Traveler->next != NULL ){
+        Traveler = Traveler->next;
+    }
+    Traveler->note = 1;
+
     PrintList(Output);
     return OK;
 } 
@@ -234,7 +251,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
     // }
     // else{
         
-        if(A!=NULL){
+    if(A!=NULL){
     PrintList(A->next);
     if(A == NULL){
         return ERROR;   // the list is empty or something else
@@ -289,11 +306,11 @@ int CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (give
 }
 
 int ListFree(SqList *L){
-    SqList *p;
-    while(L!=NULL){
-        p = L->next;
-        free(L);
-        L = p;
+    SqList *p = L->next;
+    while(p!=NULL){
+        SqList *temp = p;
+        p = p->next;
+        free(temp);
     }
     printf("free.\n");
     return OK;
@@ -388,7 +405,7 @@ int main()
     // printf("********************************         Bye~      ***************************************\n");
     //         // exit_all(&head_1);
     //         getchar();
-    //         exit(0);  //正常退�?
+    //         exit(0);  //正常退�?
     //         break;
     //         default:
     // printf("****************************输入错误......请重新输入哦***********************************\n");
