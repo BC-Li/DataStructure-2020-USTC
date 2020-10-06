@@ -61,7 +61,7 @@ int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing t
     }
     L->data = 0;
     L->index = 0;
-    L->note = 0;
+    L->note = 0; //test
     L->next = NULL;
     return OK;
 }
