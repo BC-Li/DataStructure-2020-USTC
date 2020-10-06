@@ -73,7 +73,7 @@ int ListInsert(float e, int n, SqList *L ){
 // Calculate functions for LinkedList 
 
 int ListAddition(SqList *A, SqList *B, SqList *Addition){
-    SqList *searcher_A = A,*searcher_B = B;
+    SqList *searcher_A = A->next,*searcher_B = B->next;
     int n = 0;
     float e = 0;
     Addition->next = NULL;
@@ -216,6 +216,9 @@ void welcome(){
 int main() 
 { 
     SqList A,B,Addition;
+    ListInit(&A);
+    ListInit(&B);
+    OutputListInit(&Addition);
     ListAddition(&A,&B,&Addition);
     PrintList(&Addition);
     return 0;
