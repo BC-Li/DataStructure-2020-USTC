@@ -18,6 +18,7 @@ typedef struct LinkedList{
 
 int PrintList(SqList *A);
 int DetectEmptyList(SqList *A);
+int ListFree(SqList *L);
 
 int ListInit(SqList *L){
     SqList *p = NULL, *end = NULL;
@@ -60,6 +61,7 @@ int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing t
     }
     L->data = 0;
     L->index = 0;
+    L->note = 0;
     L->next = NULL;
     return OK;
 }
@@ -177,18 +179,23 @@ int DetectEmptyList(SqList *A){
     }
     return -1;
 }
-int ListMultiply(SqList *A, SqList *B, SqList *Output){
-    SqList *MultiplyTemp = NULL;
-    OutputListInit(MultiplyTemp);
-    OutputListInit(Output);
-    SqList *searcher_A = A, *searcher_B = B;
+int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
+    // OutputListInit(MultiplyTemp);
+    // OutputListInit(Output);
+    SqList Temp_1,Temp_2;
+    OutputListInit(&Temp_1);
+    OutputListInit(&Temp_2);
+    SqList *searcher_A = A->next, *searcher_B = B->next;
     while(searcher_A!=NULL){
         while(searcher_B!=NULL){
             int MultiplyedData = searcher_A->data * searcher_B->data;
             int MultipliedIndex = searcher_A->index + searcher_B->index;
             ListInsert(MultiplyedData,MultipliedIndex,MultiplyTemp);
+            searcher_B = searcher_B->next;
         }
-        ListAddition(MultiplyTemp,Output,Output);
+        ListAddition(MultiplyTemp,Output,&Temp_1);
+        Output = &Temp_1;
+        searcher_A = searcher_A->next;
     }
     PrintList(Output);
     return OK;
@@ -291,11 +298,12 @@ int main()
     // ListAddition(&A,&B,&Addition);
     // PrintList(&Addition);
     // return 0;
-    SqList A,B,Addition;
+    SqList A,B,Addition,Multiply;
     ListInit(&A);
     ListInit(&B);
     OutputListInit(&Addition);
-    ListSubtraction(&A,&B,&Addition);
+    OutputListInit(&Multiply);
+    ListMultiply(&A,&B,&Addition,&Multiply);
     PrintList(&Addition);
     return 0;
 
@@ -357,7 +365,7 @@ int main()
     // printf("********************************         Bye~      ***************************************\n");
     //         // exit_all(&head_1);
     //         getchar();
-    //         exit(0);  //正常退出
+    //         exit(0);  //正常退�?
     //         break;
     //         default:
     // printf("****************************输入错误......请重新输入哦***********************************\n");
