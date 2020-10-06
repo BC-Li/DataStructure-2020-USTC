@@ -12,6 +12,7 @@
 typedef struct LinkedList{
     float data;
     int index;
+    int note;
     struct LinkedList *next; 
 }SqList;
 
@@ -28,10 +29,22 @@ int ListInit(SqList *L){
     }
     L->next = NULL;
     printf("Please input the coefficient and index. following order like '1 2'. press ctrl+z to stop.");
+    
+    // use 'note' to mark the first factor.
+    scanf("%d",&coefficient);
+    scanf("%d",&index_filler);
+    p = (SqList *)malloc(sizeof(SqList));
+    p->data = coefficient;
+    p->index = index_filler;
+    p->note = 1;
+    end->next = p;
+    end = p;
+
     while((scanf("%d",&coefficient)!= EOF)&&(scanf("%d",&index_filler)!= EOF)){
         p = (SqList *)malloc(sizeof(SqList));
         p->data = coefficient;
         p->index = index_filler;
+        p->note = 0;
         end->next = p;
         end = p;
     }
@@ -47,6 +60,7 @@ int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing t
     L->data = 0;
     L->index = 0;
     L->next = NULL;
+    return OK;
 }
 
 int ListInsert(float e, int n, SqList *L ){
@@ -60,6 +74,7 @@ int ListInsert(float e, int n, SqList *L ){
     p->next = NULL;
     p->data = e;
     p->index = n;
+    p->note = 0;
 
     end = L;
     while(end->next!=NULL){
@@ -74,9 +89,29 @@ int ListInsert(float e, int n, SqList *L ){
 
 int ListAddition(SqList *A, SqList *B, SqList *Addition){
     SqList *searcher_A = A->next,*searcher_B = B->next;
+    SqList * Traveler;
     int n = 0;
     float e = 0;
     Addition->next = NULL;
+    // the first factor
+    
+    if((searcher_A!=NULL)&&(searcher_B!=NULL)){
+        if(searcher_A->index == n){
+            e = e+searcher_A->data;
+            searcher_A = searcher_A ->next;
+        }
+
+        if(searcher_B->index == n){
+            e = e+searcher_B->data;
+            searcher_B = searcher_B ->next;
+        }
+
+        ListInsert(e,n,Addition);
+        e = 0;
+        n++;
+        
+    }
+    
     while((searcher_A!=NULL)&&(searcher_B!=NULL)){
 
         if(searcher_A->index == n){
@@ -93,7 +128,13 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
         e = 0;
         n++;
     }
-    
+
+    Traveler = Addition->next; // make the first factor of Addition's note 1
+    while(Traveler->next != NULL ){
+        Traveler = Traveler->next;
+    }
+    Traveler->note = 1;
+
     return OK;
 }
 
@@ -140,30 +181,30 @@ int ListMultiply(SqList *A, SqList *B, SqList *MultiplyTemp, SqList *Multiply_B,
 //  Standard Output and Other Features
 
 int PrintList(SqList *A){       // reverse print using recursive func
+    if(A!=NULL){
     PrintList(A->next);
-    if(A->next == NULL){
+    if(A == NULL){
         return ERROR;   // the list is empty or something else
     }
-
     // Head of the polynomial, add some special judgements 
-    if(A->data > 0){     
+    if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 0){  // avoid invalid judgement of zero regarding to float type  
+        printf("+%fx^%d",A->data,A->index);
+    }
+    if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 1){  // note = 1 means the first factor in the polynomial
         printf("%fx^%d",A->data,A->index);
     }
-    if(A->data > 0){     
+    if(A->data < 0){     
         printf("-%fx^%d",A->data,A->index);
     }
     
     // Print the remaining factors
-    while(A != NULL){
-        if(A->data > 0){
-            printf("+%fx^%d",A->data,A->index);
-        } 
-        if(A->data < 0){
-            printf("%fx^%d",A->data,A->index);
-        }
-    }
 
     return OK;
+    }
+    else{
+        return ERROR;
+    }
+   
 }
 
 int DerivativeFunction(SqList *A){   // F'(x)
@@ -197,6 +238,7 @@ int ListFree(SqList *L){
         L = p;
     }
     printf("free.\n");
+    return OK;
 }
 void welcome(){
 	printf ("\n");
