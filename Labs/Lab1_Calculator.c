@@ -231,6 +231,7 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
             ListInsert(p->data,p->index,Output);
         }
         Temp_1.next = NULL;
+        MultiplyTemp->next = NULL;
     }
     SqList *Traveler = Output->next; // make the first factor of Multiply's note 1
     while(Traveler->next != NULL ){
