@@ -340,37 +340,35 @@ void welcome(){
     printf("********************************    3.Substraction ***************************************\n");
     printf("********************************    4.Multiply     ***************************************\n");
     printf("********************************    5.Derivative   ***************************************\n");
+    printf("********************************    6.Print        ***************************************\n");
+    printf("********************************    7.Free         ***************************************\n");
     printf("********************************    0.EXIT         ***************************************\n\n\n");
  
 }
 
 int main() 
 { 
-    // SqList A,B,Addition;
-    // ListInit(&A);
-    // ListInit(&B);
-    // OutputListInit(&Addition);
-    // ListAddition(&A,&B,&Addition);
-    // PrintList(&Addition);
-    // return 0;
     char  choice[100];
     int choice_1;
     char  yes_no;
-    
+    SqList *Polynomial = NULL; 
+    int PolynomialNumbers; 
     
     do
     {
         welcome();
-    printf("*******************************    Input your command  0-5:  *****************************\n");
+        printf("*******************************    Input your command  0-5:  *****************************\n");
         scanf("%s",choice);
         choice_1=choice[0]-48;
         printf("\n");
         switch(choice_1)
        {
             case 1:{  //INIT
-                SqList A, B;
-                ListInit(&A);
-                ListInit(&B);
+                scanf("How many polynomials do you want to init?%d",&PolynomialNumbers);
+                SqList *Polynomial = (SqList *)calloc(PolynomialNumbers,sizeof(SqList *));
+                for(int i = 0; i < PolynomialNumbers;i++){
+                    ListInit(&Polynomial[i]);
+                }
                 break;
             }
             case 2:{
@@ -408,11 +406,28 @@ int main()
                 break;
             }
             
-            case 5:{
-                SqList A;
-                ListInit(&A); 
-                DerivativeFunction(&A);
-                ListFree(&A);
+            case 5:{        //5.Derivative
+                int DerivativeNumber;
+                scanf("Which Polynomial would you want to output Derivative ?%d",&DerivativeNumber);
+                PrintList(&Polynomial[DerivativeNumber]);
+                break;
+            }
+
+            case 6:{
+                int PrintListNumber;
+                scanf("Which Polynomial would you want to print?%d",&PrintListNumber);
+                PrintList(&Polynomial[PrintListNumber]);
+                break;
+            }
+            
+            case 7:{
+                int FreeListNumber;
+                scanf("Which Polynomial would you want to free?%d",&FreeListNumber);
+                ListFree(&Polynomial[FreeListNumber]);
+                // See if it is useful: SqList * Mover = NULL;
+                for(int i = FreeListNumber + 1; i <= PolynomialNumbers; i++){
+                    Polynomial[i-1] = Polynomial[i];
+                }
                 break;
             }
             
