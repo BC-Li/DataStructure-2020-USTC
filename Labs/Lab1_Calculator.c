@@ -16,6 +16,8 @@ typedef struct LinkedList{
     struct LinkedList *next; 
 }SqList;
 
+//  import functions
+
 int PrintList(SqList *A);
 int DetectEmptyList(SqList *A);
 int ListFree(SqList *L);
@@ -91,7 +93,6 @@ int ListInsert(float e, int n, SqList *L ){
     }
     end->next = p;
     return OK;
-    printf("Insert ready.\n");
 }
 
 // Calculate functions for LinkedList 
@@ -170,6 +171,7 @@ int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
     
     return OK;
 }
+
 int DetectEmptyList(SqList *A){
     SqList *Searcher;
     Searcher = A;
@@ -185,6 +187,7 @@ int DetectEmptyList(SqList *A){
     }
     return -1;
 }
+
 int SearchList(float x,float y, SqList *L){
     SqList *p = L;
     while(p!=NULL){
@@ -196,11 +199,13 @@ int SearchList(float x,float y, SqList *L){
     }
     return 0;
 }
+
 int CopyList(SqList *A, SqList *B){
     // ListFree(B);
 
     return OK;
 }
+
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(MultiplyTemp);
     // OutputListInit(Output);
@@ -260,26 +265,32 @@ int PrintList(SqList *A){       // reverse print using recursive func
 
     // Head of the polynomial, add some special judgements 
     if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 1){  // note = 1 means the first factor in the polynomial
-        printf("%fx^%d",A->data,A->index);
+        if(A->index == 0){
+            printf("%f",A->data);
+        }
+       printf("%fx^%d",A->data,A->index);
     }
 
     if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 0){  // avoid invalid judgement of zero regarding to float type  
+        if(A->index == 0){
+            printf("+%f",A->data);
+        }
         printf("+%fx^%d",A->data,A->index);
     }
 
     if(A->data < 0){     
+        if(A->index == 0){
+            printf("%f",A->data);
+        }
         printf("%fx^%d",A->data,A->index);
     }
     
-    // Print the remaining factors
 
     return OK;
     }
     else{
         return ERROR;
     }
-   
-    // }
     
 }
 
@@ -313,24 +324,26 @@ int ListFree(SqList *L){
         p = p->next;
         free(temp);
     }
-    printf("free.\n");
     return OK;
 }
+
 void welcome(){
 	printf ("\n");
 	printf ("\n");
 	printf ("\n");
-    printf("***************************Unary sparse polynomial calculator By Bocheng Li*****************************");
-    printf("***************************View https://github.com/BC-Li for more info.*********************************");
+    printf("***************  Unary sparse polynomial calculator By Bocheng Li*************************\n");
+    printf("***************   View https://github.com/BC-Li for more info.   *************************\n");
     printf("\n");
     printf("\n");
-    printf("********************************    1.INIT      ***************************************\n");
-    printf("********************************    2.Subtraction      ***************************************\n");
-    printf("********************************    3.Multiply      ***************************************\n");
-    printf("********************************    4.Display  ***************************************\n");
-    printf("********************************    0.EXIT    ***************************************\n\n\n");
+    printf("********************************    1.INIT         ***************************************\n");
+    printf("********************************    2.Addition     ***************************************\n");
+    printf("********************************    3.Substraction ***************************************\n");
+    printf("********************************    4.Multiply     ***************************************\n");
+    printf("********************************    5.Derivative   ***************************************\n");
+    printf("********************************    0.EXIT         ***************************************\n\n\n");
  
 }
+
 int main() 
 { 
     // SqList A,B,Addition;
@@ -340,86 +353,87 @@ int main()
     // ListAddition(&A,&B,&Addition);
     // PrintList(&Addition);
     // return 0;
-    SqList A,B,Addition,Multiply;
-    ListInit(&A);
-    ListInit(&B);
-    OutputListInit(&Addition);
-    OutputListInit(&Multiply);
-    ListMultiply(&A,&B,&Addition,&Multiply);
-    return 0;
-
-
-
-
-
-    // char  choice[100];
-    // int choice_1;
-    // char  yes_no;
+    char  choice[100];
+    int choice_1;
+    char  yes_no;
     
     
-    // do
-    // {
-    //     welcome();
-    // printf("*******************************    Input your command  0-5:  **************************************\n");
-    //     scanf("%s",choice);
-    //     choice_1=choice[0]-48;
-    //     printf("\n");
-    //     switch(choice_1)
-    //    {
-    //         case 1:{
-    //             SqList A, B;
-    //             ListInit(&A);
-    //             ListInit(&B);
-    //             break;
-    //         }
-    //         case 2:{
-    //             SqList A, B;
-    //             ListInit(&A);
-    //             ListInit(&B);
-    //             SqList AdditionResult;
-    //             ListAddition(&A,&B,&AdditionResult);
-    //             PrintList(&AdditionResult);
-    //             break;
-    //         }
-    //         case 3:{
-    //             SqList A, B;
-    //             ListInit(&A);
-    //             ListInit(&B);
-    //             SqList SubtractionResult;
-    //             ListSubtraction(&A,&B,&SubtractionResult);
-    //             PrintList(&SubtractionResult);
-    //             break;
-    //         }
-    //         case 4:{
-    //             SqList A, B;
-    //             ListInit(&A);
-    //             ListInit(&B);
-    //             SqList MultiplyResult;
-    //             // ListMultiply(&A,&B,&MultiplyTemp, SqList *Multiply_B, SqList *Output);
-    //             PrintList(&MultiplyResult);
-    //             break;
-    //         }
+    do
+    {
+        welcome();
+    printf("*******************************    Input your command  0-5:  *****************************\n");
+        scanf("%s",choice);
+        choice_1=choice[0]-48;
+        printf("\n");
+        switch(choice_1)
+       {
+            case 1:{  //INIT
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                break;
+            }
+            case 2:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                SqList AdditionResult;
+                ListAddition(&A,&B,&AdditionResult);
+                PrintList(&AdditionResult);
+                ListFree(&A);
+                ListFree(&B);
+                break;
+            }
+            case 3:{
+                SqList A, B;
+                ListInit(&A);
+                ListInit(&B);
+                SqList SubtractionResult;
+                ListSubtraction(&A,&B,&SubtractionResult);
+                PrintList(&SubtractionResult);
+                ListFree(&A);
+                ListFree(&B);
+                break;
+            }
+            case 4:{
+            SqList A,B,Addition,Multiply;
+            ListInit(&A);
+            ListInit(&B);
+            OutputListInit(&Addition);
+            OutputListInit(&Multiply);
+            ListMultiply(&A,&B,&Addition,&Multiply);
+            ListFree(&A);
+            ListFree(&B);
+            return 0;
+                break;
+            }
             
-    //         case 5:
-    //         break;
-    //         case 0:
-    // printf("********************************         Bye~      ***************************************\n");
-    //         // exit_all(&head_1);
-    //         getchar();
-    //         exit(0);  //正常退�?
-    //         break;
-    //         default:
-    // printf("****************************输入错误......请重新输入哦***********************************\n");
-    //          break;
-    //     }
-    // printf("****************************  是否继续  Y  or   N?   ************************************\n");
-    //      do
-    //     {
-    //        scanf("%c",&yes_no);
-    //     }
-	// while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
-    // }
-    // while(yes_no=='Y'||yes_no=='y');
+            case 5:{
+                SqList A;
+                ListInit(&A); 
+                DerivativeFunction(&A);
+                ListFree(&A);
+                break;
+            }
+            
+            case 0:
+    printf("********************************         Bye~      ***************************************\n");
+            // exit_all(&head_1);
+            getchar();
+            exit(0);  //正常退�?
+            break;
+            default:
+    printf("****************************输入错误......请重新输入哦***********************************\n");
+             break;
+        }
+    printf("****************************  是否继续  Y  or   N?   ************************************\n");
+         do
+        {
+           scanf("%c",&yes_no);
+        }
+	while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
+    }
+    while(yes_no=='Y'||yes_no=='y');
 }
 
 
