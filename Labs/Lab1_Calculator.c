@@ -32,7 +32,7 @@ int ListInit(SqList *L){
         return ERROR;
     }
     L->next = NULL;
-    printf("Please input the coefficient and index. following order like '1 2'. press ctrl+z to stop.");
+    printf("Please input the coefficient and index. following order like '1 2'. press ctrl+z to stop.\nNote: Invalid input may cause unexpected error.\n");
     
     // use 'note' to mark the first factor.
     scanf("%d",&coefficient);
@@ -418,20 +418,22 @@ int main()
             
             case 0:
     printf("********************************         Bye~      ***************************************\n");
-            // exit_all(&head_1);
             getchar();
-            exit(0);  //正常退�?
+            exit(0); 
             break;
             default:
-    printf("****************************输入错误......请重新输入哦***********************************\n");
+    printf("****************************EMM you seem to enter the wrong letters qwq*******************\n");
              break;
         }
-    printf("****************************  是否继续  Y  or   N?   ************************************\n");
+    printf("****************************  Do you want to proceed? ************************************\n");
          do
         {
            scanf("%c",&yes_no);
-        }
-	while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
+        } 
+        while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
+
+
+    system("CLS");
     }
     while(yes_no=='Y'||yes_no=='y');
 }
