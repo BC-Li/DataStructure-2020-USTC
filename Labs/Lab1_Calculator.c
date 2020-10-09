@@ -48,7 +48,7 @@ int ListInsertStoreList(StoreList *L, int i , Elemtype e){
         L->elem = newbase;
         L->Listsize = L->Listsize + 10;
     }
-    Elemtype *q = &(L->elem[i-1]);
+    Elemtype *q = &(L->elem[i]);
     for(Elemtype *p = &(L->elem[L->length-1]);p>=q;--p){
         *(p+1) = *p;
     }
