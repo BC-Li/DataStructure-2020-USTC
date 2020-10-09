@@ -9,6 +9,7 @@
 # define OK 1
 # define ERROR 0
 # define LISTINITSIZE 100
+# define Elemtype SqList *
 
 typedef struct LinkedList{
     float data;
@@ -18,9 +19,9 @@ typedef struct LinkedList{
 }SqList;
 
 typedef struct StoreList{
-    SqList *base;
+    Elemtype * elem;
+    int length;
     int Listsize;
-    int Listlen;
 }StoreList;
 
 //  import functions
@@ -31,15 +32,43 @@ int ListFree(SqList *L);
 
 // init Storelist
 
-// int InitStoreList(StoreList *L){
-//     L->base = (SqList *)malloc((LISTINITSIZE)*sizeof(SqList *));
-//     if(!L->base)exit(OVERFLOW);
-//     L->Listlen = 0;
-//     L->Listsize = LISTINITSIZE;
-//     return OK;
-// }
+int InitStoreList(StoreList *L){
+    L->elem = (Elemtype *)malloc((LISTINITSIZE)*sizeof(SqList *));
+    if(!L->elem)exit(OVERFLOW);
+    L->length = 0;
+    L->Listsize = LISTINITSIZE;
+    return OK;
+}
 
-SqList * ListInit(){
+int ListInsertStoreList(StoreList *L, int i , Elemtype e){
+    if(L->length>= L->Listsize){
+        Elemtype *newbase;
+        newbase = (Elemtype *)realloc(L->elem,(LISTINITSIZE+10)*sizeof(Elemtype));
+        if(!newbase)exit(OVERFLOW);
+        L->elem = newbase;
+        L->Listsize = L->Listsize + 10;
+    }
+    Elemtype *q = &(L->elem[i-1]);
+    for(Elemtype *p = &(L->elem[L->length-1]);p>=q;--p){
+        *(p+1) = *p;
+    }
+    *q = e; // ???
+    ++L->length;
+    return OK;
+}
+
+int ListDeleteStoreList(StoreList *L, int i ){
+    if((i<1)||(i>L->length))return ERROR;
+    Elemtype *p = &(L->elem[i-1]);
+    Elemtype *q = L->elem + L->length -1;
+    for(++p;p<=q;++p){
+        *(p-1)=*p;
+    }
+    --L->length;
+    return OK;
+}
+
+SqList *ListInit(){
     SqList *L;
     SqList *p = NULL, *end = NULL;
     int coefficient;
@@ -373,9 +402,9 @@ int main()
     int choice_1;
     char  yes_no;
     int PolynomialNumbers;
-    SqList *Polynomial [1000];
-
-    // PrintList(Polynomial[1]);
+    StoreList Polynomial;
+    InitStoreList(&Polynomial);
+    // PrintList(Polynomial.elem[1]);
     
     do
     {
@@ -390,7 +419,7 @@ int main()
                 printf("How many polynomials do you want to init?\n");
                 scanf("%d",&PolynomialNumbers);
                 for(int i = 0; i < PolynomialNumbers;i++){
-                    Polynomial[i] = ListInit();
+                    ListInsertStoreList(&Polynomial,i,ListInit());
                 }
                 break;
             }
@@ -399,31 +428,29 @@ int main()
                 printf("Which 2 Polynomials would you want to add?\n");
                 scanf("%d %d",&A,&B);
                 SqList AdditionResult;
-                ListAddition(Polynomial[A-1],Polynomial[B-1],&AdditionResult);
+                ListAddition(Polynomial.elem[A-1],Polynomial.elem[B-1],&AdditionResult);
                 PrintList(&AdditionResult);
-                ListFree(&AdditionResult);
                 break;
             }
             case 3:{
-                SqList A, B;
-                ListInit(&A);
-                ListInit(&B);
+                int A,B;
+                printf("Which 2 Polynomials would you want to substract? A-B\n");
+                scanf("%d %d",&A,&B);
                 SqList SubtractionResult;
-                ListSubtraction(&A,&B,&SubtractionResult);
+                ListSubtraction(Polynomial.elem[A-1],Polynomial.elem[B-1],&SubtractionResult);
                 PrintList(&SubtractionResult);
-                ListFree(&A);
-                ListFree(&B);
                 break;
             }
             case 4:{
-            SqList A,B,Addition,Multiply;
-            ListInit(&A);
-            ListInit(&B);
-            OutputListInit(&Addition);
-            OutputListInit(&Multiply);
-            ListMultiply(&A,&B,&Addition,&Multiply);
-            ListFree(&A);
-            ListFree(&B);
+            //     int A,B;
+            //     printf("Which 2 Polynomials would you want to add?\n");
+            //     scanf("%d %d",&A,&B);
+            //     SqList MultiplyResult;
+            //     ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult);
+            //     PrintList(&AdditionResult);
+            //     ListFree(&AdditionResult);
+
+            // ListFree(&MultiplyResult);
             return 0;
                 break;
             }
@@ -431,7 +458,7 @@ int main()
             case 5:{        //5.Derivative
                 int DerivativeNumber;
                 scanf("Which Polynomial would you want to output Derivative ?%d",&DerivativeNumber);
-                PrintList(Polynomial[DerivativeNumber]);
+                PrintList(Polynomial.elem[DerivativeNumber-1]);
                 break;
             }
 
@@ -439,17 +466,17 @@ int main()
                 int PrintListNumber;
                 printf("Which Polynomial would you want to print?\n");
                 scanf("%d",&PrintListNumber);
-                PrintList(Polynomial[PrintListNumber]);
+                PrintList(Polynomial.elem[PrintListNumber-1]);
                 break;
             }
             
             case 7:{
                 int FreeListNumber;
                 scanf("Which Polynomial would you want to free?%d",&FreeListNumber);
-                ListFree(Polynomial[FreeListNumber]);
+                ListFree(Polynomial.elem[FreeListNumber-1]);
                 // See if it is useful: SqList * Mover = NULL;
                 for(int i = FreeListNumber + 1; i <= PolynomialNumbers; i++){
-                    Polynomial[i-1] = Polynomial[i];
+                    Polynomial.elem[i-1] = Polynomial.elem[i];
                 }
                 break;
             }
