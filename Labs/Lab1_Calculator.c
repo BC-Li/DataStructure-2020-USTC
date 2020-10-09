@@ -6,8 +6,9 @@
 # include <stdlib.h>
 # include <math.h>
 
-# define OK 1;
-# define ERROR 0;
+# define OK 1
+# define ERROR 0
+# define LISTINITSIZE 100
 
 typedef struct LinkedList{
     float data;
@@ -16,21 +17,41 @@ typedef struct LinkedList{
     struct LinkedList *next; 
 }SqList;
 
+typedef struct StoreList{
+    SqList *base;
+    int Listsize;
+    int Listlen;
+}StoreList;
+
 //  import functions
 
 int PrintList(SqList *A);
 int DetectEmptyList(SqList *A);
 int ListFree(SqList *L);
 
-int ListInit(SqList *L){
+// init Storelist
+
+// int InitStoreList(StoreList *L){
+//     L->base = (SqList *)malloc((LISTINITSIZE)*sizeof(SqList *));
+//     if(!L->base)exit(OVERFLOW);
+//     L->Listlen = 0;
+//     L->Listsize = LISTINITSIZE;
+//     return OK;
+// }
+
+SqList * ListInit(){
+    SqList *L;
     SqList *p = NULL, *end = NULL;
     int coefficient;
     int index_filler;
-    end = L;
     L = (SqList *)malloc(sizeof(SqList));
+    end = L;
     if(!L){
         return ERROR;
     }
+    L->data = 0;
+    L->index = 0;
+    L->note = 0;
     L->next = NULL;
     printf("Please input the coefficient and index. following order like '1 2'. press ctrl+z to stop.\nNote: Invalid input may cause unexpected error.\n");
     
@@ -53,7 +74,7 @@ int ListInit(SqList *L){
         end = p;
     }
     end->next = NULL;
-    return OK;
+    return L;
 }
 
 int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing the outputs.
@@ -180,7 +201,7 @@ int DetectEmptyList(SqList *A){
     }
     Searcher = Searcher->next;
     while(Searcher!=NULL){
-        if(Searcher->data > 0.0000000001){
+        if(fabsf(Searcher->data) > 0.0000000001){
             return 1;
         }
         Searcher = Searcher -> next;
@@ -351,8 +372,10 @@ int main()
     char  choice[100];
     int choice_1;
     char  yes_no;
-    SqList *Polynomial = NULL; 
-    int PolynomialNumbers; 
+    int PolynomialNumbers;
+    SqList *Polynomial [1000];
+
+    // PrintList(Polynomial[1]);
     
     do
     {
@@ -364,22 +387,21 @@ int main()
         switch(choice_1)
        {
             case 1:{  //INIT
-                scanf("How many polynomials do you want to init?%d",&PolynomialNumbers);
-                SqList *Polynomial = (SqList *)calloc(PolynomialNumbers,sizeof(SqList *));
+                printf("How many polynomials do you want to init?\n");
+                scanf("%d",&PolynomialNumbers);
                 for(int i = 0; i < PolynomialNumbers;i++){
-                    ListInit(&Polynomial[i]);
+                    Polynomial[i] = ListInit();
                 }
                 break;
             }
             case 2:{
-                SqList A, B;
-                ListInit(&A);
-                ListInit(&B);
+                int A,B;
+                printf("Which 2 Polynomials would you want to add?\n");
+                scanf("%d %d",&A,&B);
                 SqList AdditionResult;
-                ListAddition(&A,&B,&AdditionResult);
+                ListAddition(Polynomial[A-1],Polynomial[B-1],&AdditionResult);
                 PrintList(&AdditionResult);
-                ListFree(&A);
-                ListFree(&B);
+                ListFree(&AdditionResult);
                 break;
             }
             case 3:{
@@ -409,21 +431,22 @@ int main()
             case 5:{        //5.Derivative
                 int DerivativeNumber;
                 scanf("Which Polynomial would you want to output Derivative ?%d",&DerivativeNumber);
-                PrintList(&Polynomial[DerivativeNumber]);
+                PrintList(Polynomial[DerivativeNumber]);
                 break;
             }
 
             case 6:{
                 int PrintListNumber;
-                scanf("Which Polynomial would you want to print?%d",&PrintListNumber);
-                PrintList(&Polynomial[PrintListNumber]);
+                printf("Which Polynomial would you want to print?\n");
+                scanf("%d",&PrintListNumber);
+                PrintList(Polynomial[PrintListNumber]);
                 break;
             }
             
             case 7:{
                 int FreeListNumber;
                 scanf("Which Polynomial would you want to free?%d",&FreeListNumber);
-                ListFree(&Polynomial[FreeListNumber]);
+                ListFree(Polynomial[FreeListNumber]);
                 // See if it is useful: SqList * Mover = NULL;
                 for(int i = FreeListNumber + 1; i <= PolynomialNumbers; i++){
                     Polynomial[i-1] = Polynomial[i];
@@ -440,7 +463,7 @@ int main()
     printf("****************************EMM you seem to enter the wrong letters qwq*******************\n");
              break;
         }
-    printf("****************************  Do you want to proceed? ************************************\n");
+    printf("\n****************************  Do you want to proceed? ************************************\n");
          do
         {
            scanf("%c",&yes_no);
@@ -448,7 +471,7 @@ int main()
         while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
 
 
-    system("CLS");
+    // system("CLS");
     }
     while(yes_no=='Y'||yes_no=='y');
 }
