@@ -374,6 +374,7 @@ void welcome(){
     printf("********************************    5.Derivative   ***************************************\n");
     printf("********************************    6.Print        ***************************************\n");
     printf("********************************    7.Free         ***************************************\n");
+    printf("********************************    8.Print all    ***************************************\n");
     printf("********************************    0.EXIT         ***************************************\n\n\n");
  
 }
@@ -459,6 +460,16 @@ int main()
                 // See if it is useful: SqList * Mover = NULL;
                 for(int i = FreeListNumber + 1; i <= PolynomialNumbers; i++){
                     Polynomial.elem[i-1] = Polynomial.elem[i];
+                }
+                break;
+            }
+
+            case 8:{
+                printf("Print all the polynomials !!!\n");
+                for(int i = 0;i<Polynomial.length;i++){
+                printf("The No.%d polynomial is: ",i);
+                PrintList(Polynomial.elem[i]);
+                printf("\n");
                 }
                 break;
             }
