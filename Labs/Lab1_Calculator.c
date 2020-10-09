@@ -153,24 +153,6 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
     int n = 0;
     float e = 0;
     Addition->next = NULL;
-    // the first factor
-    
-    // if((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
-    //     if(searcher_A->index == n){
-    //         e = e+searcher_A->data;
-    //         searcher_A = searcher_A ->next;
-    //     }
-
-    //     if(searcher_B->index == n){
-    //         e = e+searcher_B->data;
-    //         searcher_B = searcher_B ->next;
-    //     }
-
-    //     ListInsert(e,n,Addition);
-    //     e = 0;
-    //     n++;
-        
-    // }
     
     while((searcher_A!=NULL)||(searcher_B!=NULL)){
 
