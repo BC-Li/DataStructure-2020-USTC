@@ -29,6 +29,7 @@ typedef struct StoreList{
 int PrintList(SqList *A);
 int DetectEmptyList(SqList *A);
 int ListFree(SqList *L);
+int SearchList(float x,float y, SqList *L);
 
 // init Storelist
 
@@ -68,6 +69,24 @@ int ListDeleteStoreList(StoreList *L, int i ){
     return OK;
 }
 
+void ListSort(SqList * L)
+{
+    SqList *p,*q;
+    for(p = L -> next; p != NULL; p = p -> next){
+          for(q = p -> next; q != NULL; q = q -> next){
+                    if((p -> index) > (q -> index)){
+                    int s = q -> index;
+                    q -> index = p -> index;
+                    p -> index = s;
+                    float x = q->data;
+                    q-> data = p->data;
+                    p->data = x; 
+                    }
+
+          }
+    }
+}
+
 SqList *ListInit(){
     SqList *L;
     SqList *p = NULL, *end = NULL;
@@ -90,19 +109,27 @@ SqList *ListInit(){
     p = (SqList *)malloc(sizeof(SqList));
     p->data = coefficient;
     p->index = index_filler;
-    p->note = 1;
+    p->note = 0;
     end->next = p;
     end = p;
+    end->next = NULL;
+
 
     while((scanf("%d",&coefficient)!= EOF)&&(scanf("%d",&index_filler)!= EOF)){
+        if(SearchList(coefficient, index_filler, L) == 1){  //  same index return 1
+        } 
+        else{
         p = (SqList *)malloc(sizeof(SqList));
         p->data = coefficient;
         p->index = index_filler;
         p->note = 0;
         end->next = p;
         end = p;
+        end->next = NULL;
+        }
     }
-    end->next = NULL;
+    end->note = 1;
+    ListSort(L);
     return L;
 }
 
@@ -173,6 +200,7 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
 
     Traveler = Addition->next; // make the first factor of Addition's note 1
     while(Traveler->next != NULL ){
+        Traveler->note = 0;
         Traveler = Traveler->next;
     }
     Traveler->note = 1;
@@ -225,7 +253,7 @@ int SearchList(float x,float y, SqList *L){
     while(p!=NULL){
         if(y == p->index){
             p->data = p->data + x;
-            return 1;
+            return 1;       //  same index return 1
         }
         p = p->next;
     }
@@ -272,6 +300,7 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     }
     SqList *Traveler = Output->next; // make the first factor of Multiply's note 1
     while(Traveler->next != NULL ){
+        Traveler->note = 0;
         Traveler = Traveler->next;
     }
     Traveler->note = 1;
