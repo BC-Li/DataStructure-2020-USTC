@@ -275,30 +275,73 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
 
     return OK;
 }
-
-int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
-    SqList *searcher_A = A,*searcher_B = B;
-    int n = 0, e = 0;
+int ListSubtraction(SqList *A, SqList *B, SqList *Substraction){
+    SqList *searcher_A = A->next,*searcher_B = B->next;
+    SqList * Traveler;
+    // int n = -1000000;
+    // float e = 0;
     Substraction->next = NULL;
-    while((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
-
-        if(searcher_A->index == n){
-            e = e+searcher_A->data;
-            searcher_A = searcher_A ->next;
-        }
-
-        if(searcher_B->index == n){
-            e = e-searcher_B->data;
-            searcher_B = searcher_B ->next;
-        }
-
-        ListInsert(e,n,Substraction);
-        e = 0;
-        n++;
-    }
     
+    while((searcher_A!=NULL)&&(searcher_B!=NULL)){
+        if(searcher_A->index<searcher_B->index){
+            ListInsert(searcher_A->data,searcher_A->index,Substraction);
+            searcher_A = searcher_A ->next;
+            continue;
+        }
+        if(searcher_A->index==searcher_B->index){
+            ListInsert(searcher_A->data-searcher_B->data,searcher_A->index,Substraction);
+            searcher_A = searcher_A->next;
+            searcher_B = searcher_B ->next;
+            continue;
+        }
+        if(searcher_A->index>searcher_B->index){
+            ListInsert(-searcher_B->data,searcher_B->index,Substraction);
+            searcher_B = searcher_B ->next;
+            continue;
+        }
+    }
+    while(searcher_A!=NULL){
+        ListInsert(searcher_A->data,searcher_A->index,Substraction);
+        searcher_A = searcher_A ->next;
+    }
+    while(searcher_B!=NULL){
+        ListInsert(-searcher_B->data,searcher_B->index,Substraction);
+        searcher_B = searcher_B ->next;
+    }
+
+    Traveler = Substraction->next; // make the first factor of Addition's note 1
+    while(Traveler->next != NULL ){
+        Traveler->note = 0;
+        Traveler = Traveler->next;
+    }
+    Traveler->note = 1;
+
     return OK;
 }
+
+// int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
+//     SqList *searcher_A = A,*searcher_B = B;
+//     int n = 0, e = 0;
+//     Substraction->next = NULL;
+//     while((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
+
+//         if(searcher_A->index == n){
+//             e = e+searcher_A->data;
+//             searcher_A = searcher_A ->next;
+//         }
+
+//         if(searcher_B->index == n){
+//             e = e-searcher_B->data;
+//             searcher_B = searcher_B ->next;
+//         }
+
+//         ListInsert(e,n,Substraction);
+//         e = 0;
+//         n++;
+//     }
+    
+//     return OK;
+// }
 
 int DetectEmptyList(SqList *A){
     SqList *Searcher;
