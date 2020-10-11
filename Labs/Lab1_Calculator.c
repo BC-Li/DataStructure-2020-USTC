@@ -389,17 +389,17 @@ int PrintList(SqList *A){       // reverse print using recursive func
     }
     
 }
-
-int DerivativeFunction(SqList *A){   // F'(x)
-    SqList *Traveler = A;
-    if(Traveler->next == NULL){
-        return ERROR;   // the list is empty or something else
-    }
-    while(Traveler != NULL){
-        printf("%fx^%d",Traveler->data*Traveler->index,Traveler->index-1);
-    }
-    return OK;
-}
+//  Deprecated Function
+// int DerivativeFunction(SqList *A){   // F'(x)
+//     SqList *Traveler = A;
+//     if(Traveler->next == NULL){
+//         return ERROR;   // the list is empty or something else
+//     }
+//     while(Traveler != NULL){
+//         printf("%fx^%d",Traveler->data*Traveler->index,Traveler->index-1);
+//     }
+//     return OK;
+// }
 
 float CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (given x)
     float Value = 0;
@@ -428,20 +428,20 @@ void welcome(){
 	printf ("\n");
 	printf ("\n");
 	printf ("\n");
-    printf("***************  Unary sparse polynomial calculator By Bocheng Li*************************\n");
-    printf("***************   View https://github.com/BC-Li for more info.   *************************\n");
-    printf("\n");
-    printf("\n");
+    printf("******************************************************************************************\n");
+    printf("*****************Unary sparse polynomial calculator By Bocheng Li*************************\n");
+    printf("*******************View https://github.com/BC-Li for more info.***************************\n");
+    printf("************************************   MENU    *******************************************\n");
     printf("********************************    1.INIT         ***************************************\n");
     printf("********************************    2.Addition     ***************************************\n");
     printf("********************************    3.Substraction ***************************************\n");
     printf("********************************    4.Multiply     ***************************************\n");
-    printf("********************************    5.Derivative   ***************************************\n");
+    printf("******************************** 5.Calculate Value ***************************************\n");
     printf("********************************    6.Print        ***************************************\n");
     printf("********************************    7.Free         ***************************************\n");
     printf("********************************    8.Print all    ***************************************\n");
-    printf("********************************  9.Calculate Value***************************************\n");
-    printf("********************************    0.EXIT         ***************************************\n\n\n");
+    printf("********************************    0.EXIT         ***************************************\n");
+    printf("******************************************************************************************\n\n\n");
  
 }
 
@@ -504,13 +504,13 @@ int main()
                 break;
             }
             
-            case 5:{        //5.Derivative
-                int DerivativeNumber;
-                printf("Which Polynomial would you want to output Derivative ?\n");
-                scanf("%d",&DerivativeNumber);
-                DerivativeFunction(Polynomial.elem[DerivativeNumber-1]);
-                break;
-            }
+            // case 5:{        //5.Derivative
+            //     int DerivativeNumber;
+            //     printf("Which Polynomial would you want to output Derivative ?\n");
+            //     scanf("%d",&DerivativeNumber);
+            //     DerivativeFunction(Polynomial.elem[DerivativeNumber-1]);
+            //     break;
+            // }
 
             case 6:{
                 int PrintListNumber;
@@ -536,13 +536,13 @@ int main()
             case 8:{
                 printf("Print all the polynomials !!!\n");
                 for(int i = 0;i<Polynomial.length;i++){
-                printf("The No.%d polynomial is: ",i);
+                printf("The No.%d polynomial is: ",i+1);
                 PrintList(Polynomial.elem[i]);
                 printf("\n");
                 }
                 break;
             }
-            case 9:{
+            case 5:{
                 printf("Which Polynomial would you want to calculate?\n");
                 int CalculateListNumber;
                 float x;
