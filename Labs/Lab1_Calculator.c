@@ -374,12 +374,13 @@ int DerivativeFunction(SqList *A){   // F'(x)
 
 float CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (given x)
     float Value = 0;
-    SqList *Traveler = A;
+    SqList *Traveler = A->next;
     if(Traveler->next == NULL){
         return ERROR;   // the list is empty or something else
     }
     while(Traveler != NULL){
-        Value = Value + Traveler->data*(pow(x,Traveler->data));
+        Value = Value + Traveler->data*(pow(x,Traveler->index));
+        Traveler = Traveler->next;
     }
     return Value;
 }
