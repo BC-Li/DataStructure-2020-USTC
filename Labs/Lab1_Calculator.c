@@ -233,7 +233,7 @@ int ListInsert(float e, int n, SqList *L ){
 //     return firstc;
 // }
 int ListAddition(SqList *A, SqList *B, SqList *Addition){
-    SqList *searcher_A = A,*searcher_B = B;
+    SqList *searcher_A = A->next,*searcher_B = B->next;
     SqList * Traveler;
     // int n = -1000000;
     // float e = 0;
@@ -243,15 +243,18 @@ int ListAddition(SqList *A, SqList *B, SqList *Addition){
         if(searcher_A->index<searcher_B->index){
             ListInsert(searcher_A->data,searcher_A->index,Addition);
             searcher_A = searcher_A ->next;
+            continue;
         }
         if(searcher_A->index==searcher_B->index){
             ListInsert(searcher_A->data+searcher_B->data,searcher_A->index,Addition);
             searcher_A = searcher_A->next;
             searcher_B = searcher_B ->next;
+            continue;
         }
         if(searcher_A->index>searcher_B->index){
             ListInsert(searcher_B->data,searcher_B->index,Addition);
             searcher_B = searcher_B ->next;
+            continue;
         }
     }
     while(searcher_A!=NULL){
