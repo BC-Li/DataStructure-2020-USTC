@@ -174,64 +174,6 @@ int ListInsert(float e, int n, SqList *L ){
     return OK;
 }
 
-// Calculate functions for LinkedList 
-// Dxs add_dxs(Dxs firsta, Dxs firstb){
-//     Dxs firstc, ha, hb, pc, s;
-//     int a, b;
-//     float sum;
-//     firstc = (Dxs)malloc(sizeof(Lnode));
-//     firstc->coef = -1;
-//     firstc->expn = -1;
-//     firstc->next = NULL;
-//     pc = firstc;
-
-//     ha = firsta->next;
-//     hb = firstb->next;
-//     while(ha!= NULL && hb != NULL){
-//         a = ha->expn;
-//         b = hb->expn;
-//         if(a < b){
-//             //将a加入c中,移动a和c的指针
-//             pc->next = ha;
-//             pc = pc->next;
-//             ha = ha->next;
-//         }else if(a > b){
-//             //将b加入c中,移动b和c的指针
-//             pc->next = hb;
-//             pc = pc->next;
-//             hb = hb->next;
-//         }else{
-//             sum = ha->coef + hb->coef;
-//             if(sum != 0.0){
-//                 //将和加入a中,再将a加入c中,移动c的指针
-//                 ha->coef = sum;
-//                 pc->next = ha;
-//                 pc = pc->next;
-//             }else{
-
-//                 //查找删除A中系数之和为0的那个节点
-//                 s = firsta;
-//                 while(s != ha){
-//                     s = s->next;
-//                 }
-//                 s->next = ha->next;
-//             }
-//             //ab已经处理完成,同时后移一位
-//             ha = ha->next;
-//             hb = hb->next;
-//         }
-//     }
-
-//     //将剩余部分加入c后面
-//     if(ha != NULL){
-//         pc->next = ha;
-//     }
-
-//     if(hb != NULL){
-//         pc->next = hb;
-//     }
-//     return firstc;
-// }
 int ListAddition(SqList *A, SqList *B, SqList *Addition){
     SqList *searcher_A = A->next,*searcher_B = B->next;
     SqList * Traveler;
@@ -318,31 +260,6 @@ int ListSubtraction(SqList *A, SqList *B, SqList *Substraction){
 
     return OK;
 }
-
-// int ListSubtraction(SqList *A,SqList *B, SqList *Substraction){    // A-B
-//     SqList *searcher_A = A,*searcher_B = B;
-//     int n = 0, e = 0;
-//     Substraction->next = NULL;
-//     while((searcher_A->next!=NULL)&&(searcher_B->next!=NULL)){
-
-//         if(searcher_A->index == n){
-//             e = e+searcher_A->data;
-//             searcher_A = searcher_A ->next;
-//         }
-
-//         if(searcher_B->index == n){
-//             e = e-searcher_B->data;
-//             searcher_B = searcher_B ->next;
-//         }
-
-//         ListInsert(e,n,Substraction);
-//         e = 0;
-//         n++;
-//     }
-    
-//     return OK;
-// }
-
 int DetectEmptyList(SqList *A){
     SqList *Searcher;
     Searcher = A;
@@ -583,7 +500,6 @@ int main()
                 OutputListInit(&MultiplyTemp);
                 OutputListInit(&MultiplyResult);
                 ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult,&MultiplyTemp);
-                PrintList(&MultiplyResult);
                 ListInsertStoreList(&Polynomial,Polynomial.length,&MultiplyResult);
                 break;
             }
@@ -613,6 +529,7 @@ int main()
                 for(int i = FreeListNumber + 1; i <= Polynomial.length; i++){
                     Polynomial.elem[i-1] = Polynomial.elem[i];
                 }
+                Polynomial.length--;
                 break;
             }
 
