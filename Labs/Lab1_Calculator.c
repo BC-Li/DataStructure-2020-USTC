@@ -329,21 +329,27 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("%f",A->data);
         }
-       printf("%fx^%d",A->data,A->index);
+        else{
+            printf("%fx^%d",A->data,A->index);
+        }
     }
 
     if(A->data > 0 && (fabsf(A->data) > 0.000001) && A->note == 0){  // avoid invalid judgement of zero regarding to float type  
         if(A->index == 0){
             printf("+%f",A->data);
         }
-        printf("+%fx^%d",A->data,A->index);
+        else{
+            printf("+%fx^%d",A->data,A->index);
+        }
     }
 
     if(A->data < 0){     
         if(A->index == 0){
             printf("%f",A->data);
         }
-        printf("%fx^%d",A->data,A->index);
+        else{
+            printf("%fx^%d",A->data,A->index);
+        }
     }
     
 
@@ -366,7 +372,7 @@ int DerivativeFunction(SqList *A){   // F'(x)
     return OK;
 }
 
-int CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (given x)
+float CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (given x)
     float Value = 0;
     SqList *Traveler = A;
     if(Traveler->next == NULL){
@@ -375,7 +381,7 @@ int CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (give
     while(Traveler != NULL){
         Value = Value + Traveler->data*(pow(x,Traveler->data));
     }
-    return OK;
+    return Value;
 }
 
 int ListFree(SqList *L){
@@ -404,6 +410,7 @@ void welcome(){
     printf("********************************    6.Print        ***************************************\n");
     printf("********************************    7.Free         ***************************************\n");
     printf("********************************    8.Print all    ***************************************\n");
+    printf("********************************  9.Calculate Value***************************************\n");
     printf("********************************    0.EXIT         ***************************************\n\n\n");
  
 }
@@ -454,23 +461,23 @@ int main()
                 break;
             }
             case 4:{
-            //     int A,B;
-            //     printf("Which 2 Polynomials would you want to add?\n");
-            //     scanf("%d %d",&A,&B);
-            //     SqList MultiplyResult;
-            //     ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult);
-            //     PrintList(&AdditionResult);
-            //     ListFree(&AdditionResult);
-
-            // ListFree(&MultiplyResult);
-            return 0;
+                int A,B;
+                printf("Which 2 Polynomials would you want to Multiply?\n");
+                scanf("%d %d",&A,&B);
+                SqList MultiplyResult;
+                SqList MultiplyTemp;
+                OutputListInit(&MultiplyTemp);
+                ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult,&MultiplyTemp);
+                PrintList(&MultiplyResult);
+                ListInsertStoreList(&Polynomial,Polynomial.length,&MultiplyResult);
                 break;
             }
             
             case 5:{        //5.Derivative
                 int DerivativeNumber;
-                scanf("Which Polynomial would you want to output Derivative ?%d",&DerivativeNumber);
-                PrintList(Polynomial.elem[DerivativeNumber-1]);
+                printf("Which Polynomial would you want to output Derivative ?\n");
+                scanf("%d",&DerivativeNumber);
+                DerivativeFunction(Polynomial.elem[DerivativeNumber-1]);
                 break;
             }
 
@@ -484,10 +491,11 @@ int main()
             
             case 7:{
                 int FreeListNumber;
-                scanf("Which Polynomial would you want to free?%d",&FreeListNumber);
+                printf("Which Polynomial would you want to free?\n");
+                scanf("%d",&FreeListNumber);
                 ListFree(Polynomial.elem[FreeListNumber-1]);
                 // See if it is useful: SqList * Mover = NULL;
-                for(int i = FreeListNumber + 1; i <= PolynomialNumbers; i++){
+                for(int i = FreeListNumber + 1; i <= Polynomial.length; i++){
                     Polynomial.elem[i-1] = Polynomial.elem[i];
                 }
                 break;
@@ -502,7 +510,16 @@ int main()
                 }
                 break;
             }
-            
+            case 9:{
+                printf("Which Polynomial would you want to calculate?\n");
+                int CalculateListNumber;
+                float x;
+                scanf("%d",&CalculateListNumber);
+                printf("Input x please.\n");
+                scanf("%f",&x);
+                printf("the value is %f",CalculateValue(Polynomial.elem[CalculateListNumber-1],x));
+                break;
+            }
             case 0:
     printf("********************************         Bye~      ***************************************\n");
             getchar();
