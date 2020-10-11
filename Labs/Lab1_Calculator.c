@@ -136,10 +136,12 @@ SqList *ListInit(){
 int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing the outputs.
     SqList *p = NULL, *end = NULL;
     end = L;
-    L = (SqList *)malloc(sizeof(SqList));
     if(!L){
         return ERROR;
     }
+    L->data = 0;
+    L->index = 0;
+    L->note = 0;
     L->next = NULL;
     p = (SqList *)malloc(sizeof(SqList));
     p->data = 0;
@@ -173,29 +175,92 @@ int ListInsert(float e, int n, SqList *L ){
 }
 
 // Calculate functions for LinkedList 
+// Dxs add_dxs(Dxs firsta, Dxs firstb){
+//     Dxs firstc, ha, hb, pc, s;
+//     int a, b;
+//     float sum;
+//     firstc = (Dxs)malloc(sizeof(Lnode));
+//     firstc->coef = -1;
+//     firstc->expn = -1;
+//     firstc->next = NULL;
+//     pc = firstc;
 
+//     ha = firsta->next;
+//     hb = firstb->next;
+//     while(ha!= NULL && hb != NULL){
+//         a = ha->expn;
+//         b = hb->expn;
+//         if(a < b){
+//             //将a加入c中,移动a和c的指针
+//             pc->next = ha;
+//             pc = pc->next;
+//             ha = ha->next;
+//         }else if(a > b){
+//             //将b加入c中,移动b和c的指针
+//             pc->next = hb;
+//             pc = pc->next;
+//             hb = hb->next;
+//         }else{
+//             sum = ha->coef + hb->coef;
+//             if(sum != 0.0){
+//                 //将和加入a中,再将a加入c中,移动c的指针
+//                 ha->coef = sum;
+//                 pc->next = ha;
+//                 pc = pc->next;
+//             }else{
+
+//                 //查找删除A中系数之和为0的那个节点
+//                 s = firsta;
+//                 while(s != ha){
+//                     s = s->next;
+//                 }
+//                 s->next = ha->next;
+//             }
+//             //ab已经处理完成,同时后移一位
+//             ha = ha->next;
+//             hb = hb->next;
+//         }
+//     }
+
+//     //将剩余部分加入c后面
+//     if(ha != NULL){
+//         pc->next = ha;
+//     }
+
+//     if(hb != NULL){
+//         pc->next = hb;
+//     }
+//     return firstc;
+// }
 int ListAddition(SqList *A, SqList *B, SqList *Addition){
-    SqList *searcher_A = A->next,*searcher_B = B->next;
+    SqList *searcher_A = A,*searcher_B = B;
     SqList * Traveler;
-    int n = 0;
-    float e = 0;
+    // int n = -1000000;
+    // float e = 0;
     Addition->next = NULL;
     
-    while((searcher_A!=NULL)||(searcher_B!=NULL)){
-
-        if(searcher_A!=NULL && searcher_A->index == n){
-            e = e+searcher_A->data;
+    while((searcher_A!=NULL)&&(searcher_B!=NULL)){
+        if(searcher_A->index<searcher_B->index){
+            ListInsert(searcher_A->data,searcher_A->index,Addition);
             searcher_A = searcher_A ->next;
         }
-
-        if(searcher_B!=NULL && searcher_B->index == n){
-            e = e+searcher_B->data;
+        if(searcher_A->index==searcher_B->index){
+            ListInsert(searcher_A->data+searcher_B->data,searcher_A->index,Addition);
+            searcher_A = searcher_A->next;
             searcher_B = searcher_B ->next;
         }
-
-        ListInsert(e,n,Addition);
-        e = 0;
-        n++;
+        if(searcher_A->index>searcher_B->index){
+            ListInsert(searcher_B->data,searcher_B->index,Addition);
+            searcher_B = searcher_B ->next;
+        }
+    }
+    while(searcher_A!=NULL){
+        ListInsert(searcher_A->data,searcher_A->index,Addition);
+        searcher_A = searcher_A ->next;
+    }
+    while(searcher_B!=NULL){
+        ListInsert(searcher_B->data,searcher_B->index,Addition);
+        searcher_B = searcher_B ->next;
     }
 
     Traveler = Addition->next; // make the first factor of Addition's note 1
@@ -249,7 +314,7 @@ int DetectEmptyList(SqList *A){
 }
 
 int SearchList(float x,float y, SqList *L){
-    SqList *p = L;
+    SqList *p = L->next;
     while(p!=NULL){
         if(y == p->index){
             p->data = p->data + x;
@@ -271,6 +336,7 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(Output);
     SqList Temp_1;
     MultiplyTemp->next = NULL;
+    Output->next = NULL;
     Temp_1.data = 0;
     Temp_1.index = 0;
     Temp_1.note = 0; //test
@@ -449,6 +515,7 @@ int main()
                 scanf("%d %d",&A,&B);
                 SqList AdditionResult;
                 ListAddition(Polynomial.elem[A-1],Polynomial.elem[B-1],&AdditionResult);
+                ListInsertStoreList(&Polynomial,Polynomial.length,&AdditionResult);
                 PrintList(&AdditionResult);
                 break;
             }
@@ -468,6 +535,7 @@ int main()
                 SqList MultiplyResult;
                 SqList MultiplyTemp;
                 OutputListInit(&MultiplyTemp);
+                OutputListInit(&MultiplyResult);
                 ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult,&MultiplyTemp);
                 PrintList(&MultiplyResult);
                 ListInsertStoreList(&Polynomial,Polynomial.length,&MultiplyResult);
