@@ -10,6 +10,7 @@
 # define ERROR 0
 # define LISTINITSIZE 100
 # define Elemtype SqList *
+# define OVERFLOW -1
 
 typedef struct LinkedList{
     float data;
@@ -288,11 +289,11 @@ int SearchList(float x,float y, SqList *L){
     return 0;
 }
 
-int CopyList(SqList *A, SqList *B){
-    // ListFree(B);
+// int CopyList(SqList *A, SqList *B){
+//     // ListFree(B);
 
-    return OK;
-}
+//     return OK;
+// }
 
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(MultiplyTemp);
@@ -358,6 +359,9 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("%f",A->data);
         }
+        if(A->data == 1){
+            printf("x^%d",A->index);
+        }
         else{
             printf("%fx^%d",A->data,A->index);
         }
@@ -367,14 +371,20 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("+%f",A->data);
         }
+        if(A->data == 1){
+            printf("+x^%d",A->index);
+        }
         else{
             printf("+%fx^%d",A->data,A->index);
         }
     }
 
-    if(A->data < 0){     
+    if(A->data < 0 && (fabsf(A->data) > 0.00000000001)){     
         if(A->index == 0){
             printf("%f",A->data);
+        }
+        if(A->data == -1){
+            printf("-x^%d",A->index);
         }
         else{
             printf("%fx^%d",A->data,A->index);
@@ -569,7 +579,7 @@ int main()
         while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
 
 
-    // system("CLS");
+     system("CLS");
     }
     while(yes_no=='Y'||yes_no=='y');
 }
