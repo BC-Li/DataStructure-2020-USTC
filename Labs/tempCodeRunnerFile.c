@@ -1,1 +1,1 @@
-pow
+system("CLS");

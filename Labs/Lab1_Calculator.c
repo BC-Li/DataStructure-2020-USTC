@@ -499,6 +499,7 @@ int main()
                 scanf("%d %d",&A,&B);
                 SqList SubtractionResult;
                 ListSubtraction(Polynomial.elem[A-1],Polynomial.elem[B-1],&SubtractionResult);
+                ListInsertStoreList(&Polynomial,Polynomial.length,&SubtractionResult);
                 PrintList(&SubtractionResult);
                 break;
             }
