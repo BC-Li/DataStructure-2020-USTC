@@ -260,7 +260,7 @@ int ListSubtraction(SqList *A, SqList *B, SqList *Substraction){
     Traveler->note = 1;
 
     return OK;
-}
+}    
 int DetectEmptyList(SqList *A){
     SqList *Searcher;
     Searcher = A;
@@ -477,8 +477,9 @@ int main()
             case 1:{  //INIT
                 printf("How many polynomials do you want to init?\n");
                 scanf("%d",&PolynomialNumbers);
+                int PolynomialTempLength = Polynomial.length;
                 for(int i = 0; i < PolynomialNumbers;i++){
-                    ListInsertStoreList(&Polynomial,i,ListInit());
+                    ListInsertStoreList(&Polynomial,PolynomialTempLength+i,ListInit());
                 }
                 break;
             }
