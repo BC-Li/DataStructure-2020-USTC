@@ -10,7 +10,6 @@
 # define ERROR 0
 # define LISTINITSIZE 100
 # define Elemtype SqList *
-# define OVERFLOW -1
 
 typedef struct LinkedList{
     float data;
