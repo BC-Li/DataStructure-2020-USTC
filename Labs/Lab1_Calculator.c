@@ -537,7 +537,7 @@ int main()
                 scanf("%d",&FreeListNumber);
                 ListFree(Polynomial.elem[FreeListNumber-1]);
                 // See if it is useful: SqList * Mover = NULL;
-                for(int i = FreeListNumber + 1; i <= Polynomial.length; i++){
+                for(int i = FreeListNumber; i <= Polynomial.length; i++){
                     Polynomial.elem[i-1] = Polynomial.elem[i];
                 }
                 Polynomial.length--;
