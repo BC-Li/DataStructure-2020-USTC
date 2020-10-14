@@ -413,7 +413,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
 float CalculateValue(SqList *A, float x){     // Calculate the value of f(x) (given x)
     float Value = 0;
     SqList *Traveler = A->next;
-    if(Traveler->next == NULL){
+    if(Traveler == NULL){
         return ERROR;   // the list is empty or something else
     }
     while(Traveler != NULL){
@@ -580,7 +580,7 @@ int main()
         while(yes_no!='Y'&&yes_no!='y'&&yes_no!='N'&&yes_no!='n');
 
 
-     system("CLS");
+    //  system("CLS");
     }
     while(yes_no=='Y'||yes_no=='y');
 }
