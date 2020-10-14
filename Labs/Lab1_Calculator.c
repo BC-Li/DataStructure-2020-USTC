@@ -358,7 +358,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("%f",A->data);
         }
-        if(A->data == 1){
+        else if(A->data == 1){
             printf("x^%d",A->index);
         }
         else{
@@ -370,7 +370,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("+%f",A->data);
         }
-        if(A->data == 1){
+        else if(A->data == 1){
             printf("+x^%d",A->index);
         }
         else{
@@ -382,7 +382,7 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("%f",A->data);
         }
-        if(A->data == -1){
+        else if(A->data == -1){
             printf("-x^%d",A->index);
         }
         else{
