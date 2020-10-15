@@ -442,6 +442,10 @@ int PrintList(SqList *A){       // reverse print using recursive func
             printf("%f",A->data);
         }
         else if(A->index == 1){
+            if(A->data == -1){
+            printf("-x");
+        }
+            else 
             printf("%fx",A->data);
         }
         else if(A->data == -1){
