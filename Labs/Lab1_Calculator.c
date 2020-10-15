@@ -92,6 +92,7 @@ SqList *ListInit(){
     SqList *p = NULL, *end = NULL;
     int coefficient;
     int index_filler;
+    int counter;
     L = (SqList *)malloc(sizeof(SqList));
     end = L;
     if(!L){
@@ -101,8 +102,9 @@ SqList *ListInit(){
     L->index = 0;
     L->note = 0;
     L->next = NULL;
+    printf("How many terms do you want to put in this Polynomial?\n");
+    scanf("%d",&counter);
     printf("Please input the coefficient and index. following order like '1 2'. press ctrl+z to stop.\nNote: Invalid input may cause unexpected error.\n");
-    
     // use 'note' to mark the first factor.
     scanf("%d",&coefficient);
     scanf("%d",&index_filler);
@@ -115,7 +117,10 @@ SqList *ListInit(){
     end->next = NULL;
 
 
-    while((scanf("%d",&coefficient)!= EOF)&&(scanf("%d",&index_filler)!= EOF)){
+    // while((scanf("%d",&coefficient)!= EOF)&&(scanf("%d",&index_filler)!= EOF)){
+        for(int i = 2;i<=counter;i++){
+        scanf("%d",&coefficient);
+        scanf("%d",&index_filler);
         if(SearchList(coefficient, index_filler, L) == 1){  //  same index return 1
         } 
         else{
@@ -131,6 +136,43 @@ SqList *ListInit(){
     end->note = 1;
     ListSort(L);
     return L;
+}
+SqList* ListCopy(SqList *ListForCP){
+
+    SqList * Searcher = ListForCP->next;
+    SqList *L;
+    SqList *p = NULL, *end = NULL;
+    L = (SqList *)malloc(sizeof(SqList));
+    end = L;
+    if(!L){
+        return ERROR;
+    }
+    L->data = 0;
+    L->index = 0;
+    L->note = 0;
+    L->next = NULL;
+    p = (SqList *)malloc(sizeof(SqList));
+    p->data = Searcher->data;
+    p->index = Searcher->index;
+    p->note = Searcher->note;
+    end->next = p;
+    end = p;
+    end->next = NULL;
+    Searcher  = Searcher->next;
+
+    // while((scanf("%d",&coefficient)!= EOF)&&(scanf("%d",&index_filler)!= EOF)){
+    while(Searcher!=NULL){
+        p = (SqList *)malloc(sizeof(SqList));
+        p->data = Searcher->data;
+        p->index =Searcher->index;
+        p->note = Searcher->note;
+        end->next = p;
+        end = p;
+        end->next = NULL;
+        }
+    end->note = 1;
+    return L;
+    
 }
 
 int OutputListInit(SqList *L){  // Init a linkedlist which is used for storing the outputs.
@@ -288,11 +330,11 @@ int SearchList(float x,float y, SqList *L){
     return 0;
 }
 
-// int CopyList(SqList *A, SqList *B){
-//     // ListFree(B);
+SqList *CopyList(SqList *A, SqList *B){
+    
 
-//     return OK;
-// }
+    return B;
+}
 
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp){
     // OutputListInit(MultiplyTemp);
@@ -358,6 +400,15 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("%f",A->data);
         }
+        else if(A->index == 1){
+            if(A->data == 1){
+            printf("x");
+        }
+            else
+            {
+                printf("%fx",A->data);
+        }
+        }
         else if(A->data == 1){
             printf("x^%d",A->index);
         }
@@ -370,6 +421,14 @@ int PrintList(SqList *A){       // reverse print using recursive func
         if(A->index == 0){
             printf("+%f",A->data);
         }
+        else if(A->index == 1){
+            if(A->data == 1){
+                printf("+x");
+            }
+            else{
+                printf("+%fx",A->data);
+            }
+        }
         else if(A->data == 1){
             printf("+x^%d",A->index);
         }
@@ -381,6 +440,9 @@ int PrintList(SqList *A){       // reverse print using recursive func
     if(A->data < 0 && (fabsf(A->data) > 0.00000000001)){     
         if(A->index == 0){
             printf("%f",A->data);
+        }
+        else if(A->index == 1){
+            printf("%fx",A->data);
         }
         else if(A->data == -1){
             printf("-x^%d",A->index);
@@ -511,7 +573,9 @@ int main()
                 OutputListInit(&MultiplyTemp);
                 OutputListInit(&MultiplyResult);
                 ListMultiply(Polynomial.elem[A-1],Polynomial.elem[B-1],&MultiplyResult,&MultiplyTemp);
-                ListInsertStoreList(&Polynomial,Polynomial.length,&MultiplyResult);
+                ListInsertStoreList(&Polynomial,Polynomial.length,ListCopy(&MultiplyResult));
+                ListFree(&MultiplyResult);
+                ListFree(&MultiplyTemp);
                 break;
             }
             
