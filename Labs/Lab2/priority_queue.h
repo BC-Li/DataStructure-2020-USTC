@@ -19,58 +19,93 @@ public:
     static bool empty(const struct Priority_Queue &q);
     static bool full(const struct Priority_Queue &q);
 };
-
+template <typename T>
+int cmp(const int *a, const int *b){
+    return a>b;
+}
 template <typename T>
 void Priority_Queue<T>::init(struct Priority_Queue<T> &q, size_t capacity, int (*cmp)(const T &a, const T &b))
 {
-    // TODO
+    q.data = (T*)malloc((capacity + 1)*sizeof(T));
+    q.rear = 1;
 }
 
 template <typename T>
-void Priority_Queue<T>::destroy
-(struct Priority_Queue<T> &q)
+void Priority_Queue<T>::destroy(struct Priority_Queue<T> &q)
 {
-    // TODO
+    free(q.data);
+    q.rear = 1;
 }
 
 template <typename T>
 bool Priority_Queue<T>::enqueue(struct Priority_Queue<T> &q, const T &e)
 {
-    // TODO
-    return false;
+    if(full(q) == true){
+        return false;
+    }
+    else{
+        int temp = q.rear;
+        q.data[q.rear] = e;
+        while(cmp(q.data[temp],q.data[temp/2])>0){
+            T c = q.data[temp];
+            q.data[temp] = q.data[temp/2];
+            q.data[temp/2] = c;
+            temp = temp / 2;
+        }
+        q.rear ++;
+        return true;
+    }
 }
 
 template <typename T>
 bool Priority_Queue<T>::dequeue(struct Priority_Queue<T> &q, T &e)
 {
-    // TODO
+    e = q.data[1];
+    q.data[1] = q.data[q.rear];
+    for(int i = 1;i<q.rear;i++) {
+        for (int j = i; j < q.rear; j++) {
+            if (q.cmp(q.data[i], q.data[j]) > 0) {
+                T c = q.data[i];
+                q.data[i] = q.data[i + 1];
+                q.data[i + 1] = c;
+            }
+        }
+    }
     return false;
 }
 
 template <typename T>
 bool Priority_Queue<T>::top(const struct Priority_Queue<T> &q, T &e)
 {
-    // TODO
-    return false;
+    if(q.data[1]){
+        e = q.data[1];
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 template <typename T>
 size_t Priority_Queue<T>::length(const struct Priority_Queue<T> &q)
 {
-    // TODO
-    return 0;
+    return q.rear - 1;
 }
 
 template <typename T>
 bool Priority_Queue<T>::empty(const struct Priority_Queue<T> &q)
 {
-    // TODO
+    if(q.rear == 1){
+        return true;
+    }
     return false;
 }
 
 template <typename T>
 bool Priority_Queue<T>::full(const struct Priority_Queue<T> &q)
 {
-    // TODO
+    if(q.rear == q.capacity + 1){
+        return true;
+    }
     return false;
 }

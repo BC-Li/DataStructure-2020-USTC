@@ -23,7 +23,7 @@ public:
 template <typename T>
 void Queue<T>::init(struct Queue<T> &q, size_t capacity)
 {
-    q.data = (T*)malloc(capacity*sizeof(T));
+    q.data = (T*)malloc((capacity+1)*sizeof(T));
     q.front = q.rear = 0;
     return;
 }
@@ -66,6 +66,7 @@ template <typename T>
 bool Queue<T>::top(const struct Queue<T> &q, T &e)
 {
     if(q.data[q.front]){
+        e = q.data[q.front];
         return true;
     }
     else{
@@ -95,7 +96,7 @@ bool Queue<T>::empty(const struct Queue<T> &q)
 template <typename T>
 bool Queue<T>::full(const struct Queue<T> &q)
 {
-    if(q.rear == q.capacity){
+    if(length(q) == q.capacity){
         return true;
     }
     return false;
