@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/priority_queue.h
+stdlib.h
+-
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/queue.h
+stdlib.h
+-
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/simulation.cc
+util/util.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/util/util.h
+queue.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/queue.h
+priority_queue.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/priority_queue.h
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/test/test_memory.cc
+../util/util.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/util/util.h
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/util/util.cc
+cmath
+-
+iostream
+-
+util.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/util/util.h
+../queue.h
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/queue.h
+
+/media/aurora/Windows/Users/Amethyst/Documents/GitHub/DataStructure-2020-USTC/Labs/Lab2/util/util.h
+random
+-
+stddef.h
+-
+
