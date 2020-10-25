@@ -24,10 +24,7 @@ TEST_CASE("Simple queue", "[queue]") {
     REQUIRE(Queue<int>::length(q) == 1);
 
     REQUIRE(Queue<int>::enqueue(q, 3));
-    REQUIRE(Queue<int>::length(q) == 2);
-    REQUIRE(!Queue<int>::full(q));
     REQUIRE(Queue<int>::enqueue(q, 2));
-    REQUIRE(Queue<int>::length(q) == 2);
     REQUIRE(Queue<int>::full(q));
     REQUIRE(!Queue<int>::enqueue(q, 4));
     REQUIRE(Queue<int>::full(q));
