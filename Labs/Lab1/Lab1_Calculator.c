@@ -189,6 +189,7 @@ SqList *ListCopy(SqList *ListForCP)
         end->next = p;
         end = p;
         end->next = NULL;
+        Searcher = Searcher->next;
     }
     end->note = 1;
     return L;
@@ -377,11 +378,6 @@ int SearchList(float x, float y, SqList *L)
     return 0;
 }
 
-SqList *CopyList(SqList *A, SqList *B)
-{
-
-    return B;
-}
 
 int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp)
 {
@@ -436,7 +432,8 @@ int ListMultiply(SqList *A, SqList *B, SqList *Output, SqList *MultiplyTemp)
 //  Standard Output and Other Features
 
 int PrintList(SqList *A)
-{ // reverse print using recursive func
+{ 
+    // reverse print using recursive func
     // if(DetectEmptyList(A) == -1){
     //     printf("0,this is an empty list");
     //     return OK;

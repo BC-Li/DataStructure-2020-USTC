@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test_priority_queue.dir/test/test_priority_queue.cc.o  -o test_priority_queue 

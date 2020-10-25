@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test_memory.dir/test/test_memory.cc.o CMakeFiles/test_memory.dir/util/util.cc.o CMakeFiles/test_memory.dir/simulation.cc.o  -o test_memory 

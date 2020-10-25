@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test_simulation.dir/test/test_simulation.cc.o CMakeFiles/test_simulation.dir/util/util.cc.o CMakeFiles/test_simulation.dir/simulation.cc.o  -o test_simulation 

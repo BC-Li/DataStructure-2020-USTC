@@ -87,7 +87,7 @@ size_t Queue<T>::length(const struct Queue<T> &q)
 template <typename T>
 bool Queue<T>::empty(const struct Queue<T> &q)
 {
-    if(q.front = q.rear){
+    if(q.front == q.rear){
         return true;
     }
     return false;
