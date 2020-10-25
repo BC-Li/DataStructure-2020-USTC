@@ -37,16 +37,21 @@ double simulate(const size_t queue_capacity, const size_t num_servers, Queue<Cus
         Queue<Customer>::top(arrival_flow,customer_to_arrive);
         Priority_Queue<Customer>::top(leave_flow,customer_to_leave);
         //TODO: Check if a customer arrives before a customer leaves (Beware of empty)
-        if(customer_to_arrive.arrive_time<customer_to_leave.leave_time)
+        if(!Queue<Customer>::empty(arrival_flow) && !Priority_Queue<Customer>::full(leave_flow)){
+                Queue<Customer>::dequeue(arrival_flow,customer_to_arrive); 
+                Priority_Queue<Customer>::enqueue(leave_flow,customer_to_arrive);               
+            }
+        if(!Queue<Customer>::empty(arrival_flow) && Priority_Queue<Customer>::full(leave_flow)&& customer_to_arrive.arrive_time<customer_to_leave.leave_time)
         {
-            //TODO: A customer arrives
-            Queue<Customer>::dequeue(arrival_flow,customer_to_arrive);
-            Queue<Customer>::enqueue(queue,customer_to_arrive);
-            
+                Queue<Customer>::dequeue(arrival_flow,customer_to_arrive);
+                if(!Queue<Customer>::full){
+                    Queue<Customer>::enqueue(queue,customer_to_arrive); 
+                }
+                    
             current_time = customer_to_arrive.arrive_time;
         }
         // //TODO: Check if a customer leaves before a customer arrives (Beware of empty)
-        else if(customer_to_arrive.arrive_time>customer_to_leave.leave_time)
+        if(Queue<Customer>::empty(arrival_flow) && !Priority_Queue<Customer>::empty(leave_flow))
         {
             //TODO: A customer leaves
             Priority_Queue<Customer>::dequeue(leave_flow,customer_to_leave);
@@ -60,6 +65,7 @@ double simulate(const size_t queue_capacity, const size_t num_servers, Queue<Cus
             // TODO: A customer stops waiting in the queue
             // TODO: Remember to set the leaving time of this customer
             Queue<Customer>::dequeue(queue,customer);
+            customer.leave_time = current_time + customer.service_time;
             Priority_Queue<Customer>::enqueue(leave_flow,customer);
             // time waiting in queue
             double queue_time = current_time - customer.arrive_time;
