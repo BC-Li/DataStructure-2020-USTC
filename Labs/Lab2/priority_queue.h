@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <algorithm>
 
 template <typename T>
 struct Priority_Queue
@@ -8,7 +9,6 @@ private:
     size_t rear;
     size_t capacity;
     int (*cmp)(const T &a, const T &b);
-
 
 public:
     static void init(struct Priority_Queue &q, size_t capacity, int (*cmp)(const T &a, const T &b));
@@ -26,6 +26,8 @@ void Priority_Queue<T>::init(struct Priority_Queue<T> &q, size_t capacity, int (
 {
     q.data = (T*)malloc((capacity + 1)*sizeof(T));
     q.rear = 1;
+    q.capacity = capacity;
+    return;
 }
 
 template <typename T>
@@ -42,15 +44,9 @@ bool Priority_Queue<T>::enqueue(struct Priority_Queue<T> &q, const T &e)
         return false;
     }
     else{
-        int temp = q.rear;
-        q.data[q.rear] = e;
-        while(q.cmp(q.data[temp],q.data[temp/2])>0){
-            T c = q.data[temp];
-            q.data[temp] = q.data[temp/2];
-            q.data[temp/2] = c;
-            temp = temp / 2;
-        }
+        q.data[q.rear]=e;
         q.rear ++;
+        std::sort(q.data+1,q.data+q.rear);
         return true;
     }
 }
@@ -58,30 +54,24 @@ bool Priority_Queue<T>::enqueue(struct Priority_Queue<T> &q, const T &e)
 template <typename T>
 bool Priority_Queue<T>::dequeue(struct Priority_Queue<T> &q, T &e)
 {
-    e = q.data[1];
-    q.data[1] = q.data[q.rear];
-    for(int i = 1;i<q.rear;i++) {
-        for (int j = i; j < q.rear; j++) {
-            if (q.cmp(q.data[i], q.data[j]) > 0) {
-                T c = q.data[i];
-                q.data[i] = q.data[i + 1];
-                q.data[i + 1] = c;
-            }
-        }
+    if(empty(q)){
+        return false;
     }
+    e = q.data[1];
+    q.data[1] = q.data[q.rear-1];
+    q.rear --;
+    std::sort(q.data+1,q.data+q.rear);
     return true;
 }
 
 template <typename T>
 bool Priority_Queue<T>::top(const struct Priority_Queue<T> &q, T &e)
 {
-    if(q.data[1]){
-        e = q.data[1];
-        return true;
-    }
-    else {
+    if (empty(q))
         return false;
-    }
+
+    e = q.data[1];
+    return true;
 }
 
 template <typename T>
@@ -102,7 +92,7 @@ bool Priority_Queue<T>::empty(const struct Priority_Queue<T> &q)
 template <typename T>
 bool Priority_Queue<T>::full(const struct Priority_Queue<T> &q)
 {
-    if(q.rear == q.capacity + 1){
+    if(length(q)==q.capacity){
         return true;
     }
     return false;
