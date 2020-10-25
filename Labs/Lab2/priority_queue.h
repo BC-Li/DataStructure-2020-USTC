@@ -9,6 +9,7 @@ private:
     size_t capacity;
     int (*cmp)(const T &a, const T &b);
 
+
 public:
     static void init(struct Priority_Queue &q, size_t capacity, int (*cmp)(const T &a, const T &b));
     static void destroy(struct Priority_Queue &q);
@@ -20,8 +21,16 @@ public:
     static bool full(const struct Priority_Queue &q);
 };
 template <typename T>
-int cmp(const int *a, const int *b){
-    return a>b;
+int *cmp(const int *a, const int *b){
+    if(a>b){
+        return 1;
+    }
+    if(a==b){
+        return 0;
+    }
+    if(a<b){
+        return -1;
+    }
 }
 template <typename T>
 void Priority_Queue<T>::init(struct Priority_Queue<T> &q, size_t capacity, int (*cmp)(const T &a, const T &b))
@@ -46,7 +55,7 @@ bool Priority_Queue<T>::enqueue(struct Priority_Queue<T> &q, const T &e)
     else{
         int temp = q.rear;
         q.data[q.rear] = e;
-        while(cmp(q.data[temp],q.data[temp/2])>0){
+        while(q.cmp(q.data[temp],q.data[temp/2])>0){
             T c = q.data[temp];
             q.data[temp] = q.data[temp/2];
             q.data[temp/2] = c;
@@ -71,7 +80,7 @@ bool Priority_Queue<T>::dequeue(struct Priority_Queue<T> &q, T &e)
             }
         }
     }
-    return false;
+    return true;
 }
 
 template <typename T>
