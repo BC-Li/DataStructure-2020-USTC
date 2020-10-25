@@ -25,7 +25,8 @@ void Queue<T>::init(struct Queue<T> &q, size_t capacity)
 {
     q.data = (T*)malloc((capacity+1)*sizeof(T));
     q.front = 0;
-    q.rear = 1;
+    q.rear = 0;
+    q.capacity = capacity;
     return;
 }
 
@@ -40,25 +41,25 @@ void Queue<T>::destroy(struct Queue<T> &q)
 template <typename T>
 bool Queue<T>::enqueue(struct Queue<T> &q, const T &e)
 {
-    if(full(q) == true){
+    if(full(q)){
         return false;
     }
-    else{
+
         q.data[q.rear] = e;
-        q.rear = (q.rear + 1) % q.capacity;
+        q.rear = (q.rear + 1) % (q.capacity+1);
         return true;
-    }
+    
 }
 
 template <typename T>
 bool Queue<T>::dequeue(struct Queue<T> &q, T &e)
 {
-    if(empty(q) == true){
+    if(q.front==q.rear){
         return false;
     }
     else{
         e = q.data[q.front];
-        q.front = (q.front+1)%q.capacity;
+        q.front = (q.front+1) % (q.capacity+1);
         return true;
     }
 }
@@ -76,7 +77,7 @@ bool Queue<T>::top(const struct Queue<T> &q, T &e)
 template <typename T>
 size_t Queue<T>::length(const struct Queue<T> &q)
 {
-    return (q.rear-q.front+q.capacity)%q.capacity;
+    return ((q.rear - q.front + q.capacity+1)% (q.capacity+1));
 }
 
 template <typename T>
@@ -85,13 +86,15 @@ bool Queue<T>::empty(const struct Queue<T> &q)
     if(q.front == q.rear){
         return true;
     }
-    return false;
+    else{
+        return false;
+    }
 }
 
 template <typename T>
 bool Queue<T>::full(const struct Queue<T> &q)
 {
-    if(length(q) == q.capacity){
+    if(((q.rear+1)%(q.capacity+1))==q.front){
         return true;
     }
     return false;

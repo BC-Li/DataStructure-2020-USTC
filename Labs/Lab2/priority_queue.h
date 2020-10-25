@@ -20,18 +20,7 @@ public:
     static bool empty(const struct Priority_Queue &q);
     static bool full(const struct Priority_Queue &q);
 };
-template <typename T>
-int *cmp(const int *a, const int *b){
-    if(a>b){
-        return 1;
-    }
-    if(a==b){
-        return 0;
-    }
-    if(a<b){
-        return -1;
-    }
-}
+
 template <typename T>
 void Priority_Queue<T>::init(struct Priority_Queue<T> &q, size_t capacity, int (*cmp)(const T &a, const T &b))
 {
