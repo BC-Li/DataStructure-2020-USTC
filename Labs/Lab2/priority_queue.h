@@ -27,6 +27,7 @@ void Priority_Queue<T>::init(struct Priority_Queue<T> &q, size_t capacity, int (
     q.data = (T*)malloc((capacity + 1)*sizeof(T));
     q.rear = 1;
     q.capacity = capacity;
+    q.cmp = cmp;
     return;
 }
 
@@ -46,7 +47,18 @@ bool Priority_Queue<T>::enqueue(struct Priority_Queue<T> &q, const T &e)
     else{
         q.data[q.rear]=e;
         q.rear ++;
-        std::sort(q.data+1,q.data+q.rear);
+        T min = q.data[1];
+        size_t min_recorder = 1;
+        for(size_t i = 1;i<=q.rear-1;i++){
+            if(q.cmp(q.data[i],min)<0){
+                min_recorder = i;
+                min = q.data[i];
+            }
+        }
+        T switcher = q.data[min_recorder];
+        q.data[min_recorder]=q.data[1];
+        q.data[1]=switcher;
+        // std::sort(q.data+1,q.data+q.rear);
         return true;
     }
 }
@@ -60,7 +72,17 @@ bool Priority_Queue<T>::dequeue(struct Priority_Queue<T> &q, T &e)
     e = q.data[1];
     q.data[1] = q.data[q.rear-1];
     q.rear --;
-    std::sort(q.data+1,q.data+q.rear);
+    T min = q.data[1];
+    size_t min_recorder = 1;
+    for(size_t i = 1;i<=q.rear-1;i++){
+            if(q.cmp(q.data[i],min)<0){
+                min_recorder = i;
+                min = q.data[i];
+            }
+        }
+        T switcher = q.data[min_recorder];
+        q.data[min_recorder]=q.data[1];
+        q.data[1]=switcher;
     return true;
 }
 
