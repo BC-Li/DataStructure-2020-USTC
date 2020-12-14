@@ -37,9 +37,9 @@ CC = gcc
 CFLAGS = -O3 -Wall -march=native -std=c99 -fopenmp
 TRACK_FLAGS = -DTRACK_RESOURCES -DDEBUG
 
-SOURCE = shortest-path.c
+SOURCE = path.c
 
-EXE = shortest-path
+EXE = path
 
 all: $(EXE)
 
