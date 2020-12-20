@@ -335,6 +335,11 @@ void graph_add_edge(graph_t *g, index_t u, index_t v, index_t w)
     e[0] = u;
     e[1] = v;
     e[2] = w;
+    index_t *f = g->edges + 3 * g->num_edges;
+    g->num_edges++;
+    f[0] = v;
+    f[1] = u;
+    e[2] = w;
 }
 
 #define MAX_LINE_SIZE 1024

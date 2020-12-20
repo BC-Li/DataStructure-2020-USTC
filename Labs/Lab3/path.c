@@ -161,6 +161,7 @@ void graph_add_edge(graph_t *g, int u, int v, int w)
     e[0] = u;
     e[1] = v;
     e[2] = w;
+
 }
 
 #define MAX_LINE_SIZE 1024
