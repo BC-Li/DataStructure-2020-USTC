@@ -1,8 +1,8 @@
 ##
  # This file is part of an experimental software implementation for solving the
- # single-source shortest path problem in edge-weighted graphs. The algorithm
+ # single-source shortest binpath problem in edge-weighted graphs. The algorithm
  # considered for the implementation is Dijkstra's algorithm for the shortest
- # path problem and it runs in linear time with respect to the size of the host
+ # binpath problem and it runs in linear time with respect to the size of the host
  # graph.
  # 
  # The source code is subject to the following license.
@@ -34,19 +34,19 @@
 
 MAKE = make
 CC = gcc 
-CFLAGS = -O3 -Wall -march=native -std=c99 -fopenmp
+CFLAGS = -O3 -Wall -march=native -std=gnu99 -fopenmp
 TRACK_FLAGS = -DTRACK_RESOURCES -DDEBUG
 
-SOURCE = path.c
+SOURCE = binpath.c
 
-EXE = path
+EXE = binpath
 
 all: $(EXE)
 
-shortest-path: $(SOURCE)
+binpath: $(SOURCE)
 	$(CC) $(CFLAGS) -o $@ $< -lm 
 
-shortest-path-perf: $(SOURCE)
+binpath-perf: $(SOURCE)
 	$(CC) $(CFLAGS) $(TRACK_FLAGS) -o $@ $< -lm
 
 clean:  

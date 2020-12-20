@@ -10,9 +10,10 @@
 #include<omp.h>
 
 #define BIN_HEAP
-#define TRACK_OPTIMAL
-#define TRACK_MEMORY
-#define TRACK_RESOURCES
+// #define TRACK_OPTIMAL
+// #define TRACK_MEMORY
+// #define TRACK_RESOURCES
+// #define DEBUG
 
 #ifdef TRACK_RESOURCES
 #include<omp.h>
@@ -320,7 +321,7 @@ void graph_free(graph_t *g)
 
 void graph_add_edge(graph_t *g, index_t u, index_t v, index_t w)
 {
-    assert(u >= 0 && v >= 0 && u < g->n && v < g->n);
+    // assert(u >= 0 && v >= 0 && u < g->n && v < g->n);
 
     if(g->num_edges == g->edge_capacity) {
         g->edges = enlarge(6*g->edge_capacity, 3*g->edge_capacity, g->edges);
@@ -345,46 +346,50 @@ graph_t * graph_load(FILE *in)
     push_memtrack();
 #endif
 
-    char buf[MAX_LINE_SIZE];
+    // char buf[MAX_LINE_SIZE];
     char in_line[MAX_LINE_SIZE];
-    index_t n = 0;
-    index_t m = 0;
+    // index_t n = 0;
+    // index_t m = 0;
     index_t u, v, w;
     graph_t *g = graph_alloc();
-
+    g->n = (int)264346;
+    g->m = (int)733846;
     while(fgets(in_line, MAX_LINE_SIZE, in) != NULL) {
         char *line = strlower(in_line);
-        int c = line[0];
-        char *tok;
-        strcpy(buf, line);
-        tok = strtok(buf, " ");
-        switch(c) {
-        case 'e':
-            if(!strcmp(tok, "edges")) {
-                sscanf(line, "edges %d", &m);
-                g->m = m;
-                break;
-            } 
-            break;
-        case 'a':
-            if(!strcmp(tok, "a")) {
-                sscanf(line, "a %d %d %d", &u, &v, &w);
-                graph_add_edge(g, u-1, v-1, w);
-                break;
-            }
-            break;
-        case 'n':
-            if(!strcmp(tok, "nodes")) {
-                sscanf(line, "nodes %d", &n);
-                g->n = n;
-            }
-            break;
-        default:
-            break;
-        }
+        // int c = line[0];
+        // char *tok;
+        // strcpy(buf, line);
+        // tok = strtok(buf, " ");
+    //     switch(c) {
+    //     case 'e':
+    //         if(!strcmp(tok, "edges")) {
+    //             sscanf(line, "edges %d", &m);
+    //             g->m = m;
+    //             break;
+    //         } 
+    //         break;
+    //     case 'a':
+    //         if(!strcmp(tok, "a")) {
+    //             sscanf(line, "%d %d %d", &u, &v, &w);
+    //             graph_add_edge(g, u-1, v-1, w);
+    //             break;
+    //         }
+    //         break;
+    //     case 'n':
+    //         if(!strcmp(tok, "nodes")) {
+    //             sscanf(line, "nodes %d", &n);
+    //             g->n = n;
+    //         }
+    //         break;
+    //     default:
+    //         break;
+    //     }
+        sscanf(line, "%d %d %d", &u, &v, &w);
+        graph_add_edge(g, u-1, v-1, w);
+    //     break;
     }
-    // printf("%d",g->m);
-    // printf("%d",g->num_edges);
+    printf("%d\n",g->m);
+    printf("%d\n",g->num_edges);
     assert(g->n != 0);
     // assert(g->m == g->num_edges && g->m != 0);
     assert(g->m != 0);
@@ -453,7 +458,12 @@ dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
     }
 
     pos[n] = (2*n);
+    printf("n+1 = %d\n",n+1);
+    printf("pos = %ls\n",pos);
     index_t run = prefixsum(n+1, pos, 1);
+    printf("%d\n",run);
+    printf("%d\n",((n+1)+(4*m)+(2*n)));
+    // assert(run == 0);
     assert(run == ((n+1)+(4*m)+(2*n)));
 
 #ifdef TRACK_RESOURCES
@@ -1007,7 +1017,7 @@ int main(int argc, char **argv)
     if(argc > 1 && !strcmp(argv[1], "-h")) {
         fprintf(stdout, "Usage: %s -in <in-file> -src <source> -dst <destination>\n\n", argv[0]);
         return 0;
-    }
+    } 
 
     index_t has_input = 0;
     index_t has_source = 0;
@@ -1041,7 +1051,7 @@ int main(int argc, char **argv)
 #endif
         in = stdin;
     } else {
-        in = fopen(filename, "rb");
+        in = fopen(filename, "r");
         if(in == NULL)
             ERROR("unable to open file '%s'", filename);
     }

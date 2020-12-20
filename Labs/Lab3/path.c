@@ -10,10 +10,9 @@
 
 #define BIN_HEAP
 
-typedef int index_t;
 
-#define MAX_DISTANCE ((index_t)0x3FFFFFFF)
-#define MATH_INF ((index_t)0x3FFFFFFF)
+#define MAX_DISTANCE ((int)0x3FFFFFFF)
+#define MATH_INF ((int)0x3FFFFFFF)
 #define UNDEFINED -2
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
@@ -55,7 +54,7 @@ static void error(const char *fn, int line, const char *func,
             "ERROR [file = %s, line = %d] "
             "%s: ",
             fn,
-            (index_t)line,
+            (int)line,
             func);
     vfprintf(stderr, format, args);
     fprintf(stderr, "\n");
@@ -65,7 +64,7 @@ static void error(const char *fn, int line, const char *func,
 
 #define MALLOC(x) malloc((x))
 #define CALLOC(x, y) calloc((x), (y))
-#define FREE(x) free((x))
+// #define free(x) free((x))
 
 char *strlower(char *s)
 {
@@ -77,23 +76,23 @@ char *strlower(char *s)
     return (t);
 }
 
-char *itoa(index_t val)
+char *itoa(int val)
 {
-    index_t base = 10;
+    int base = 10;
     static char buf[32] = {0};
-    index_t i = 30;
+    int i = 30;
     for (; val && i; --i, val /= base)
         buf[i] = "0123456789abcdef"[val % base];
     return &buf[i + 1];
 }
 
 /**************************************************************  prefix sum. */
-index_t prefixsum(index_t n, index_t *a, index_t k)
+int prefixsum(int n, int *a, int k)
 {
-    index_t run = 0;
-    for (index_t u = 0; u < n; u++)
+    int run = 0;
+    for (int u = 0; u < n; u++)
     {
-        index_t tv = a[u];
+        int tv = a[u];
         a[u] = run;
         run += tv + k;
     }
@@ -102,26 +101,26 @@ index_t prefixsum(index_t n, index_t *a, index_t k)
 
 typedef struct graph
 {
-    index_t n;
-    index_t m;
-    index_t num_edges;
-    index_t edge_capacity;
-    index_t *edges;
+    int n;
+    int m;
+    int num_edges;
+    int edge_capacity;
+    int *edges;
 } graph_t;
 
-static index_t *enlarge(index_t m, index_t m_was, index_t *was)
+static int *enlarge(int m, int m_was, int *was)
 {
     assert(m >= 0 && m_was >= 0);
 
-    index_t *a = (index_t *)MALLOC(sizeof(index_t) * m);
-    index_t i;
+    int *a = (int *)MALLOC(sizeof(int) * m);
+    int i;
     if (was != (void *)0)
     {
         for (i = 0; i < m_was; i++)
         {
             a[i] = was[i];
         }
-        FREE(was);
+        free(was);
     }
     return a;
 }
@@ -141,11 +140,11 @@ graph_t *graph_alloc()
 void graph_free(graph_t *g)
 {
     if (g->edges != NULL)
-        FREE(g->edges);
-    FREE(g);
+        free(g->edges);
+    free(g);
 }
 
-void graph_add_edge(graph_t *g, index_t u, index_t v, index_t w)
+void graph_add_edge(graph_t *g, int u, int v, int w)
 {
     assert(u >= 0 && v >= 0 && u < g->n && v < g->n);
 
@@ -157,7 +156,7 @@ void graph_add_edge(graph_t *g, index_t u, index_t v, index_t w)
 
     assert(g->num_edges < g->edge_capacity);
 
-    index_t *e = g->edges + 3 * g->num_edges;
+    int *e = g->edges + 3 * g->num_edges;
     g->num_edges++;
     e[0] = u;
     e[1] = v;
@@ -171,9 +170,9 @@ graph_t *graph_load(FILE *in)
 
     char buf[MAX_LINE_SIZE];
     char in_line[MAX_LINE_SIZE];
-    index_t n = 0;
-    index_t m = 0;
-    index_t u, v, w;
+    int n = 0;
+    int m = 0;
+    int u, v, w;
     graph_t *g = graph_alloc();
 
     while (fgets(in_line, MAX_LINE_SIZE, in) != NULL)
@@ -212,6 +211,9 @@ graph_t *graph_load(FILE *in)
             break;
         }
     }
+    printf("%d\n",g->n);
+    printf("%d\n",g->m);
+    printf("%d\n",g->num_edges);
     assert(g->n != 0);
     assert(g->m != 0);
     return g;
@@ -219,20 +221,20 @@ graph_t *graph_load(FILE *in)
 
 typedef struct dijkstraq
 {
-    index_t n;
-    index_t m;
-    index_t src;
-    index_t dst;
-    index_t *pos;
-    index_t *adj;
+    int n;
+    int m;
+    int src;
+    int dst;
+    int *pos;
+    int *adj;
 } dijkstra_t;
 
-dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
+dijkstra_t *root_build(graph_t *g, int src, int dst)
 {
-    index_t n = g->n;
-    index_t m = g->m;
-    index_t *pos = (index_t *)MALLOC((n + 1) * sizeof(index_t));
-    index_t *adj = (index_t *)MALLOC(((n + 1) + (4 * m) + (2 * n)) * sizeof(index_t));
+    int n = g->n;
+    int m = g->m;
+    int *pos = (int *)MALLOC((n + 1) * sizeof(int));
+    int *adj = (int *)MALLOC(((n + 1) + (4 * m) + (2 * n)) * sizeof(int));
 
     assert(src >= 0 && src < n);
     assert(dst >= -1 && dst < n);
@@ -245,32 +247,37 @@ dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
     root->pos = pos;
     root->adj = adj;
 
-    for (index_t u = 0; u < n; u++)
+    for (int u = 0; u < n; u++)
         pos[u] = 0;
 
-    index_t *e = g->edges;
-    for (index_t j = 0; j < 3 * m; j += 3)
+    int *e = g->edges;
+    for (int j = 0; j < 3 * m; j += 3)
     {
         pos[e[j]] += 2;
         pos[e[j + 1]] += 2;
     }
 
     pos[n] = (2 * n);
-    index_t run = prefixsum(n + 1, pos, 1);
+    printf("n+1 = %d\n",n+1);
+    printf("pos = %ls\n",pos);
+    // printf("%d\n",run);
+    int run = prefixsum(n + 1, pos, 1);
+    printf("%d\n",run);
+    printf("%d\n",((n+1)+(4*m)+(2*n)));
     assert(run == ((n + 1) + (4 * m) + (2 * n)));
 
-    for (index_t u = 0; u < n; u++)
+    for (int u = 0; u < n; u++)
         adj[pos[u]] = 0;
 
-    for (index_t j = 0; j < 3 * m; j += 3)
+    for (int j = 0; j < 3 * m; j += 3)
     {
-        index_t u = e[j + 0];
-        index_t v = e[j + 1];
-        index_t w = e[j + 2];
-        index_t pu = pos[u];
-        index_t pv = pos[v];
-        index_t i_pu = pu + 1 + (2 * adj[pu]);
-        index_t i_pv = pv + 1 + (2 * adj[pv]);
+        int u = e[j + 0];
+        int v = e[j + 1];
+        int w = e[j + 2];
+        int pu = pos[u];
+        int pv = pos[v];
+        int i_pu = pu + 1 + (2 * adj[pu]);
+        int i_pv = pv + 1 + (2 * adj[pv]);
 
         adj[i_pv] = u;
         adj[i_pv + 1] = w;
@@ -280,12 +287,12 @@ dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
         adj[pu]++;
     }
 
-    index_t u = n;
+    int u = n;
     adj[pos[u]] = 0;
-    index_t pu = pos[u];
-    for (index_t v = 0; v < n; v++)
+    int pu = pos[u];
+    for (int v = 0; v < n; v++)
     {
-        index_t i_pu = pu + 1 + (2 * adj[pu]);
+        int i_pu = pu + 1 + (2 * adj[pu]);
         adj[i_pu] = v;
         adj[i_pu + 1] = MATH_INF;
         adj[pu]++;
@@ -297,34 +304,33 @@ dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
 void dijkstra_free(dijkstra_t *root)
 {
     if (root->pos != NULL)
-        FREE(root->pos);
+        free(root->pos);
     if (root->adj != NULL)
-        FREE(root->adj);
-    FREE(root);
+        free(root->adj);
+    free(root);
 }
 
-#ifdef BIN_HEAP
 typedef struct bheap_item
 {
-    index_t item;
-    index_t key;
+    int item;
+    int key;
 } bheap_item_t;
 
 typedef struct bheap
 {
-    index_t max_n;
-    index_t n;       // size of binary heap
+    int max_n;
+    int n;       // size of binary heap
     bheap_item_t *a; // stores (distance, vertex) pairs of the binary heap
-    index_t *p;      // stores the positions of vertices in the binary heap
+    int *p;      // stores the positions of vertices in the binary heap
 } bheap_t;
 
-bheap_t *bh_alloc(index_t n)
+bheap_t *bh_alloc(int n)
 {
     bheap_t *h = (bheap_t *)malloc(sizeof(bheap_t));
     h->max_n = n;
     h->n = 0;
     h->a = (bheap_item_t *)malloc((n + 1) * sizeof(bheap_item_t));
-    h->p = (index_t *)malloc(n * sizeof(index_t));
+    h->p = (int *)malloc(n * sizeof(int));
     return h;
 }
 
@@ -335,10 +341,10 @@ void bh_free(bheap_t *h)
     free(h);
 }
 
-static void bh_siftup(bheap_t *h, index_t p, index_t q)
+static void bh_siftup(bheap_t *h, int p, int q)
 {
-    index_t j = p;
-    index_t k = 2 * p;
+    int j = p;
+    int k = 2 * p;
     bheap_item_t y = h->a[p];
     while (k <= q)
     {
@@ -365,13 +371,13 @@ bheap_item_t bh_min(bheap_t *h)
     return (bheap_item_t)h->a[1];
 }
 
-static void bh_insert(bheap_t *h, index_t item, index_t key)
+static void bh_insert(bheap_t *h, int item, int key)
 {
-    index_t i = ++(h->n);
+    int i = ++(h->n);
 
     while (i >= 2)
     {
-        index_t j = i / 2;
+        int j = i / 2;
         bheap_item_t y = h->a[j];
         if (key >= y.key)
             break;
@@ -386,10 +392,10 @@ static void bh_insert(bheap_t *h, index_t item, index_t key)
     h->p[item] = i;
 }
 
-static void bh_delete(bheap_t *h, index_t item)
+static void bh_delete(bheap_t *h, int item)
 {
-    index_t n = --(h->n);
-    index_t p = h->p[item];
+    int n = --(h->n);
+    int p = h->p[item];
 
     if (p <= n)
     {
@@ -408,12 +414,12 @@ static void bh_delete(bheap_t *h, index_t item)
     }
 }
 
-static void bh_decrease_key(bheap_t *h, index_t item, index_t new_key)
+static void bh_decrease_key(bheap_t *h, int item, int new_key)
 {
-    index_t i = h->p[item];
+    int i = h->p[item];
     while (i >= 2)
     {
-        index_t j = i / 2;
+        int j = i / 2;
         bheap_item_t y = h->a[j];
         if (new_key >= y.key)
             break;
@@ -428,16 +434,16 @@ static void bh_decrease_key(bheap_t *h, index_t item, index_t new_key)
     h->p[item] = i;
 }
 
-static index_t bh_delete_min(bheap_t *h)
+static int bh_delete_min(bheap_t *h)
 {
     bheap_item_t min = (bheap_item_t)h->a[1];
-    index_t u = min.item;
+    int u = min.item;
     bh_delete((bheap_t *)h, u);
     return u;
 }
-#endif
 
-#ifdef BIN_HEAP
+
+
 // allocation
 #define heap_alloc(n) bh_alloc((n))
 #define heap_free(h) bh_free((bheap_t *)(h));
@@ -452,12 +458,10 @@ static index_t bh_delete_min(bheap_t *h)
 // heap nodes
 #define heap_node_t bheap_item_t
 #define heap_t bheap_t
-#endif
 
-/************************************************************ traceback path. */
 
-void tracepath(index_t n, index_t s, index_t cost,
-               index_t v, index_t *p)
+void tracepath(int n, int s, int cost,
+               int v, int *p)
 {
     fprintf(stdout, "[source: %d] [destination: %d] [cost: %s]\n",
             s + 1, v + 1, cost == MAX_DISTANCE ? "INFINITY" : itoa(cost));
@@ -473,7 +477,7 @@ void tracepath(index_t n, index_t s, index_t cost,
         return;
     }
 
-    index_t u = p[v];
+    int u = p[v];
     while (u != s)
     {
         if (u == UNDEFINED)
@@ -485,19 +489,19 @@ void tracepath(index_t n, index_t s, index_t cost,
     fprintf(stdout, "E %d %d\n\n", v + 1, u + 1);
 }
 
-void dijkstra(index_t n,
-              index_t m,
-              index_t *pos,
-              index_t *adj,
-              index_t s,
-              index_t *d,
-              index_t *visit,
-              index_t *p)
+void dijkstra(int n,
+              int m,
+              int *pos,
+              int *adj,
+              int s,
+              int *d,
+              int *visit,
+              int *p)
 {
 
     heap_t *h = heap_alloc(n);
     //initialise
-    for (index_t v = 0; v < n; v++)
+    for (int v = 0; v < n; v++)
     {
         d[v] = MAX_DISTANCE; //mem: n
         visit[v] = 0;        //mem: n
@@ -506,22 +510,22 @@ void dijkstra(index_t n,
     d[s] = 0;
     p[s] = UNDEFINED;
 
-    for (index_t v = 0; v < n; v++)
+    for (int v = 0; v < n; v++)
         heap_insert(h, v, d[v]);
 
     //visit and label
     while (h->n > 0)
     {
-        index_t u = heap_delete_min(h);
+        int u = heap_delete_min(h);
         visit[u] = 1;
 
-        index_t pos_u = pos[u];
-        index_t *adj_u = adj + pos_u;
-        index_t n_u = adj_u[0];
-        for (index_t i = 1; i <= 2 * n_u; i += 2)
+        int pos_u = pos[u];
+        int *adj_u = adj + pos_u;
+        int n_u = adj_u[0];
+        for (int i = 1; i <= 2 * n_u; i += 2)
         {
-            index_t v = adj_u[i];
-            index_t d_v = d[u] + adj_u[i + 1];
+            int v = adj_u[i];
+            int d_v = d[u] + adj_u[i + 1];
             if (!visit[v] && d[v] > d_v)
             {
                 d[v] = d_v;
@@ -535,22 +539,22 @@ void dijkstra(index_t n,
     heap_free(h);
 }
 
-index_t dijkstra_query(dijkstra_t *root)
+int dijkstra_query(dijkstra_t *root)
 {
 
-    index_t n = root->n;
-    index_t m = root->m;
-    index_t src = root->src;
-    index_t dst = root->dst;
-    index_t *d = (index_t *)MALLOC(n * sizeof(index_t));
-    index_t *visit = (index_t *)MALLOC(n * sizeof(index_t));
-    index_t *p = (index_t *)MALLOC(n * sizeof(index_t));
+    int n = root->n;
+    int m = root->m;
+    int src = root->src;
+    int dst = root->dst;
+    int *d = (int *)MALLOC(n * sizeof(int));
+    int *visit = (int *)MALLOC(n * sizeof(int));
+    int *p = (int *)MALLOC(n * sizeof(int));
 
     //execute query
     dijkstra(n, m, root->pos, root->adj, src, d, visit, p);
 
     //trace path
-    index_t min_cost = 0;
+    int min_cost = 0;
     if (dst != -1)
     {
         min_cost = d[dst];
@@ -558,7 +562,7 @@ index_t dijkstra_query(dijkstra_t *root)
     }
     else
     {
-        for (index_t v = 0; v < n; v++)
+        for (int v = 0; v < n; v++)
         {
             if (v != src)
             {
@@ -568,9 +572,9 @@ index_t dijkstra_query(dijkstra_t *root)
         }
     }
 
-    FREE(d);
-    FREE(visit);
-    FREE(p);
+    free(d);
+    free(visit);
+    free(p);
     return min_cost;
 }
 
@@ -585,15 +589,15 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    index_t has_input = 0;
-    index_t has_source = 0;
-    index_t has_destination = 0;
+    int has_input = 0;
+    int has_source = 0;
+    int has_destination = 0;
     char *filename = NULL;
     ;
-    index_t src = -1;
-    index_t dst = -1;
+    int src = -1;
+    int dst = -1;
 
-    for (index_t f = 1; f < argc; f++)
+    for (int f = 1; f < argc; f++)
     {
         if (argv[f][0] == '-')
         {
