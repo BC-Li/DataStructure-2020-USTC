@@ -12,7 +12,7 @@
 #define BIN_HEAP
 // #define TRACK_OPTIMAL
 // #define TRACK_MEMORY
-// #define TRACK_RESOURCES
+#define TRACK_RESOURCES
 // #define DEBUG
 
 #ifdef TRACK_RESOURCES
@@ -339,7 +339,7 @@ void graph_add_edge(graph_t *g, index_t u, index_t v, index_t w)
     g->num_edges++;
     f[0] = v;
     f[1] = u;
-    e[2] = w;
+    f[2] = w;
 }
 
 #define MAX_LINE_SIZE 1024
@@ -357,8 +357,8 @@ graph_t * graph_load(FILE *in)
     // index_t m = 0;
     index_t u, v, w;
     graph_t *g = graph_alloc();
-    g->n = (int)264346;
-    g->m = (int)733846;
+    g->n = (int)23947347;
+    g->m = (int)58333344;
     while(fgets(in_line, MAX_LINE_SIZE, in) != NULL) {
         char *line = strlower(in_line);
         // int c = line[0];
@@ -839,8 +839,11 @@ void tracepath(index_t n, index_t s, index_t cost,
 #ifdef TRACK_RESOURCES
     fprintf(stdout, "\ntracepath: ");
 #endif
+    fprintf(stdout, "[source: %d] [destination: %d] [cost: %d]\n", 
+                     s+1, v+1, cost);
     fprintf(stdout, "[source: %d] [destination: %d] [cost: %s]\n", 
                      s+1, v+1, cost==MAX_DISTANCE?"INFINITY":itoa(cost));
+    
     if(s == v) {
         fprintf(stdout, "\n\n");
         return;
@@ -855,11 +858,11 @@ void tracepath(index_t n, index_t s, index_t cost,
     while(u != s) {
         if(u == UNDEFINED)
             return;
-        fprintf(stdout, "E %d %d\n", v+1, u+1);
+        fprintf(stdout, "%d->%d", v+1, u+1);
         v = u;
         u = p[v];
     }
-    fprintf(stdout, "E %d %d\n\n", v+1, u+1);
+    fprintf(stdout, "%d->%d\n\n", v+1, u+1);
 }
 
 
@@ -970,13 +973,17 @@ index_t dijkstra_query(dijkstra_t *root)
 
     //trace path
     index_t min_cost = 0;
+
     if(dst != -1) {
         min_cost = d[dst];
+
+        printf("min_cost1 = %d\n",min_cost);
         tracepath(n, src, min_cost, dst, p);
     } else {
         for(index_t v = 0; v < n; v++) {
             if(v != src) {
                 min_cost = d[v];
+                printf("min_cost2 = %d\n",min_cost);
                 tracepath(n, src, min_cost, v, p);
             }
         }
