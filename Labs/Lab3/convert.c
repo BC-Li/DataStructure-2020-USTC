@@ -21,7 +21,6 @@ int main()
 {
 
   FILE *outfile, *infile;
-
   outfile = fopen("out.gr", "wb");
 
   infile = fopen("in.gr", "r");
