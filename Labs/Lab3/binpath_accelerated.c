@@ -429,12 +429,7 @@ dijkstra_t *root_build(graph_t *g, index_t src, index_t dst)
     }
 
     pos[n] = (2*n);
-    // printf("n+1 = %d\n",n+1);
-    // printf("pos = %ls\n",pos);
     index_t run = prefixsum(n+1, pos, 1);
-    // printf("%d\n",run);
-    // printf("%d\n",((n+1)+(4*m)+(2*n)));
-    // assert(run == 0);
     assert(run == ((n+1)+(4*m)+(2*n)));
 
 #ifdef TRACK_RESOURCES
