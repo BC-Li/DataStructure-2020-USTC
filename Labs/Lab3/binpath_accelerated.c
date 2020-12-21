@@ -351,52 +351,18 @@ graph_t * graph_load(FILE *in)
     push_memtrack();
 #endif
 
-    // char buf[MAX_LINE_SIZE];
-    char in_line[MAX_LINE_SIZE];
-    // index_t n = 0;
-    // index_t m = 0;
     index_t u, v, w;
     graph_t *g = graph_alloc();
     g->n = (int)23947347;
     g->m = (int)58333344;
-    while(fgets(in_line, MAX_LINE_SIZE, in) != NULL) {
-        char *line = strlower(in_line);
-        // int c = line[0];
-        // char *tok;
-        // strcpy(buf, line);
-        // tok = strtok(buf, " ");
-    //     switch(c) {
-    //     case 'e':
-    //         if(!strcmp(tok, "edges")) {
-    //             sscanf(line, "edges %d", &m);
-    //             g->m = m;
-    //             break;
-    //         } 
-    //         break;
-    //     case 'a':
-    //         if(!strcmp(tok, "a")) {
-    //             sscanf(line, "%d %d %d", &u, &v, &w);
-    //             graph_add_edge(g, u-1, v-1, w);
-    //             break;
-    //         }
-    //         break;
-    //     case 'n':
-    //         if(!strcmp(tok, "nodes")) {
-    //             sscanf(line, "nodes %d", &n);
-    //             g->n = n;
-    //         }
-    //         break;
-    //     default:
-    //         break;
-    //     }
-        sscanf(line, "%d %d %d", &u, &v, &w);
+    int s[3];
+    while(fread(s, sizeof(int), 3, in)) {
+        u = s[0];
+        v = s[1];
+        w = s[2];
         graph_add_edge(g, u-1, v-1, w);
-    //     break;
     }
-    // printf("%d\n",g->m);
-    // printf("%d\n",g->num_edges);
     assert(g->n != 0);
-    // assert(g->m == g->num_edges && g->m != 0);
     assert(g->m != 0);
 #ifdef TRACK_RESOURCES
     double time = pop_time();
@@ -1069,7 +1035,7 @@ int main(int argc, char **argv)
 #endif
         in = stdin;
     } else {
-        in = fopen(filename, "r");
+        in = fopen(filename, "rb");
         if(in == NULL)
             ERROR("unable to open file '%s'", filename);
     }
