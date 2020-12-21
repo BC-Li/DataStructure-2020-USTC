@@ -1,3 +1,6 @@
+// This is the test file for binary file (.gr) used in Lab 3, Data Structure in USTC.
+// usage: change the filename in function "fopen" and start.
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -16,7 +19,7 @@
 
 int main(){
     FILE *fp;
-     fp = fopen("USAbin.gr", "rb");
+     fp = fopen("test.gr", "rb");
      char in_line[1024];
     int u, v, w;
     int s[3];
