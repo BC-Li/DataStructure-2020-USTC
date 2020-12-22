@@ -28,30 +28,6 @@
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
 
-#define pnlinknext(to, el)       \
-    {                            \
-        (el)->next = (to)->next; \
-        (el)->prev = (to);       \
-        (to)->next->prev = (el); \
-        (to)->next = (el);       \
-    }
-#define pnlinkprev(to, el)       \
-    {                            \
-        (el)->prev = (to)->prev; \
-        (el)->next = (to);       \
-        (to)->prev->next = (el); \
-        (to)->prev = (el);       \
-    }
-#define pnunlink(el)                   \
-    {                                  \
-        (el)->next->prev = (el)->prev; \
-        (el)->prev->next = (el)->next; \
-    }
-#define pnrelink(el)             \
-    {                            \
-        (el)->next->prev = (el); \
-        (el)->prev->next = (el); \
-    }
 
 #define ERROR(...) error(__FILE__, __LINE__, __func__, __VA_ARGS__);
 
