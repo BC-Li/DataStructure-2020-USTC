@@ -16,3 +16,6 @@ Labs/Lab3/path
 Labs/Lab3/USAmin.gr
 Labs/Lab3/binpath_accelerated
 Labs/Lab3/USAbin.gr
+Labs/Lab3/testcpu
+Labs/Lab3/binpath_accelerated_benchmark
+Labs/Lab3/testcpu.c
