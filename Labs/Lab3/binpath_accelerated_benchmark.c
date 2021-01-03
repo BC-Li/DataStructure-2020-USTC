@@ -97,7 +97,7 @@ double pop_time(void)
     return (double) (1000.0*(wstop-wstart));        // return time between 2 points
 }
 
-char* strlower( char *s)
+char* strlower( char *s)    // func turning into small letter
 {
    char* t;
 
@@ -107,7 +107,7 @@ char* strlower( char *s)
    return(t);
 }
 
-char* itoa(int val)
+char* itoa(int val) //  func itoa,turning int into char type
 {
     int base = 10;
 	static char buf[32] = {0};
@@ -117,8 +117,7 @@ char* itoa(int val)
 	return &buf[i+1];
 }
 
-/**************************************************************  prefix sum. */
-void prefixsum(int n, int *a, int k)
+void prefixsum(int n, int *a, int k)    // return cumulative sum V[i] = V[i-1] + V[i];
 {
     int run = 0;
     for(int u = 0; u < n; u++) {
@@ -137,7 +136,7 @@ typedef struct graph
     int num_edges;
     int edge_capacity;
     int *edges;
-} graph_t;
+} graph;
 
 static int *enlarge(int m, int m_was, int *was)
 {
@@ -153,9 +152,9 @@ static int *enlarge(int m, int m_was, int *was)
     return a;
 }
 
-graph_t *graph_alloc()
+graph *graph_alloc()
 {
-    graph_t *g = (graph_t *) MALLOC(sizeof(graph_t));
+    graph *g = (graph *) MALLOC(sizeof(graph));
     g->n = 0; 
     g->m = 0; 
     g->num_edges      = 0;
@@ -165,46 +164,46 @@ graph_t *graph_alloc()
     return g;
 }
 
-void graph_free(graph_t *g)
+void graph_free(graph *g)
 {
     if(g->edges != NULL)
         FREE(g->edges);
     FREE(g);
 }
 
-void graph_add_edge(graph_t *g, int u, int v, int w)
+void graph_add_edge(graph *g, int u, int v, int w)
 {
 
     if(g->num_edges == g->edge_capacity) {
-        g->edges = enlarge(6*g->edge_capacity, 3*g->edge_capacity, g->edges);
+        g->edges = enlarge(6*g->edge_capacity, 3*g->edge_capacity, g->edges);   // 3 is for source, destination and weight. 6 doubled its capacity.
         g->edge_capacity *= 2;
     }
 
 
-    int *e = g->edges + 3*g->num_edges;
+    int *e = g->edges + 3*g->num_edges; // fetch the new location of the new edge
     g->num_edges++;
     e[0] = u;
     e[1] = v;
     e[2] = w;
-    int *f = g->edges + 3 * g->num_edges;
+    int *f = g->edges + 3*g->num_edges; // non-directed graph, adding another edge
     g->num_edges++;
     f[0] = v;
     f[1] = u;
     f[2] = w;
 }
 
-#define MAX_LINE_SIZE 1024
+#define MAX_SIZE 1024
 
-graph_t * graph_load(FILE *in)
+graph * graph_load(FILE *in)
 {
     push_time();
 
     int u, v, w;
-    graph_t *g = graph_alloc();
+    graph *g = graph_alloc();
 
-    //  hard encode the number of vertices and edges. always remember to change it if you replace original dataset !!!
+    //  hard encode the number of vertices and edges. always remember to change it if replace original dataset !!!
 
-    g->n = (int)23947347;
+    g->n = (int)23947347;   // USA dataset
     g->m = (int)58333344;
     
     //  reading the lines via fread. read 3 int at a time.
@@ -236,15 +235,15 @@ typedef struct dijkstraq
     int *adj;
 }dijkstra_t;
 
-dijkstra_t *root_build(graph_t *g, int src, int dst)
+dijkstra_t *root_build(graph *g, int src, int dst)
 {
     double time;
-    fprintf(stdout, "root build: ");
+    fprintf(stdout, "Time on building dijkstra root: ");
     push_time();    //  record root build starting time
 
     int n    = g->n;
     int m    = g->m;
-    int *pos = (int *) MALLOC((n+1)*sizeof(int));
+    int *pos = (int *) MALLOC((n+1)*sizeof(int));   // vertices
     int *adj = (int *) MALLOC(((n+1)+(4*m)+(2*n))*sizeof(int));
 
 
@@ -253,11 +252,11 @@ dijkstra_t *root_build(graph_t *g, int src, int dst)
     root->m   = m;
     root->src = src;
     root->dst = dst;
-    root->pos = pos;//
-    root->adj = adj;
+    root->pos = pos;    //  position
+    root->adj = adj;    //  adjacent vertices
 
     for(int u = 0; u < n; u++)
-        pos[u] = 0;
+        pos[u] = 0;     //
 
     int *e = g->edges;
     for(int j = 0; j < 3*m; j+=3) {
@@ -379,11 +378,11 @@ bheap_item_t bh_min(bheap_t *h)     // return the min element of the binary heap
 }
 
 static void bh_insert(bheap_t *h, int item, int key)    // insert an element to a binary heap
-{
-    int i = ++(h->n);
+{ 
+    int i = ++(h->n);   //  add an element to h, size of heap + 1
 
     while(i >= 2) {
-        int j = i / 2;
+        int j = i / 2;  //  float the data, j is the parent node of i
         bheap_item_t y = h->a[j];
         if(key >= y.key) break;
 
@@ -485,6 +484,7 @@ void tracepath(int n, int s, int cost,
     fprintf(stdout, "%d<-%d\n\n", v+1, u+1);
 }
 
+    // dijkstra(n, m, root->pos, root->adj, src, d, visit,p,dst);
 
 void dijkstra(int n,int m, int *pos, int *adj, int s, int *d,int *visit,int *p,int dst)
 {
@@ -499,42 +499,39 @@ void dijkstra(int n,int m, int *pos, int *adj, int s, int *d,int *visit,int *p,i
         visit[v] = 0;            //mem: n
         p[v]     = UNDEFINED;    //mem: n
     }
-    d[s] = 0;
-    p[s] = UNDEFINED;
+    d[s] = 0;   // distance from src to src is 0
+    p[s] = UNDEFINED;   
 
     for(int v = 0; v < n; v++)
-        heap_insert(h, v, d[v]);
+        heap_insert(h, v, d[v]);    // add vertices to binary heap
 
 
 
     fprintf(stdout, "[init: %.2lfms]", pop_time());
     push_time();
     //visit and label
-    while(h->n > 0) {
-        int u = heap_delete_min(h); 
-        visit[u]  = 1;
-                if(u == dst)
-        {
-            break;
+    while(h->n > 0) {   // while heap is not empty
+        int u = heap_delete_min(h);    //   get the vertice at heap top
+        visit[u]  = 1;                 //   label it
+        if(u == dst){                  //   if u = dst then pause search loop
+            break;                     
         }
-        int pos_u  = pos[u];
-        int *adj_u = adj + pos_u;
-        int n_u    = adj_u[0];
-        for(int i = 1; i <= 2*n_u; i += 2) {
+        int pos_u  = pos[u];        //  get position of u
+        int *adj_u = adj + pos_u;   //  find position of U
+        int n_u    = adj_u[0];      //  
+        for(int i = 1; i <= 2*n_u; i += 2) {    
             int v   = adj_u[i];
-            int d_v = d[u] + adj_u[i+1];
-            if(!visit[v] && d[v] > d_v) {
-                d[v] = d_v;
-                p[v] = u;
-                heap_decrease_key(h, v, d_v);
+            int d_v = d[u] + adj_u[i+1];    // search all the vertices related to u
+            if(!visit[v] && d[v] > d_v) {   // if v > d_v
+                d[v] = d_v;                 // update
+                p[v] = u;                   // p_v = u
+                heap_decrease_key(h, v, d_v);   //  float up
             }
         }
-        //mem: 2n+6m
     }
     fprintf(stdout, " [visit: %.2lfms] [%.2lfms]\n", pop_time(), pop_time());
     fflush(stdout);
 
-    //free heap
     heap_free(h);
 }
 
@@ -553,11 +550,7 @@ int dijkstra_query(dijkstra_t *root)
 
     //execute query
     push_time();
-    dijkstra(n, m, root->pos, root->adj, src, d, visit
-            ,p
-            ,dst
-            );
-
+    dijkstra(n, m, root->pos, root->adj, src, d, visit,p,dst);
     double dijkstra_time = pop_time();
     push_time();
 
@@ -577,15 +570,14 @@ int dijkstra_query(dijkstra_t *root)
         }
     }
 
-#ifdef TRACK_RESOURCES
+
     double trace_time = pop_time();
-    fprintf(stdout, "dijkstra-query: [query: %.2lfms] ", 
-                     dijkstra_time);
-    fprintf(stdout, "[trace: %.2lfms] [%.2lfms] ", trace_time, pop_time());
+
+    fprintf(stdout, "Total Search Time [%.2lfms] ", pop_time());
     fprintf(stdout, " ");
     fprintf(stdout, "\n");
     fflush(stdout);
-#endif
+
 
     FREE(d);
     FREE(visit);
@@ -597,13 +589,11 @@ int dijkstra_query(dijkstra_t *root)
 
 int main(int argc, char **argv)
 {
-#ifdef TRACK_RESOURCES
+
     push_time();
-    fprintf(stdout, "invoked as:");
     for(int f = 0; f < argc; f++) 
         fprintf(stdout, " %s", argv[f]);
     fprintf(stdout, "\n");
-#endif
 
     if(argc > 1 && !strcmp(argv[1], "-h")) {
         fprintf(stdout, "Usage: %s -in <in-file> -src <source> -dst <destination>\n\n", argv[0]);
@@ -633,7 +623,7 @@ int main(int argc, char **argv)
 
 
     //read input graph
-    graph_t *g = graph_load(in);
+    graph *g = graph_load(in);
     //build root query
     dijkstra_t *root = root_build(g, src, dst);
     //release graph memory
@@ -643,12 +633,11 @@ int main(int argc, char **argv)
     //release query memory
     dijkstra_free(root);
 
-#ifdef TRACK_RESOURCES
+
     double time = pop_time();
     fprintf(stdout, "Total time[%.2lfms] ", time);
     fprintf(stdout, "\n");
     get_hw_cpu();
     fflush(stdout);
-#endif
     return 0;
 }
