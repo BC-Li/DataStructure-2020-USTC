@@ -6,7 +6,7 @@ Link: http://users.diag.uniroma1.it/challenge9/.
 * ~~binpath_full.c: full version including debug and tracking mode. Uncomment `DEFINE XXX` to enable. Time run on i7-9750H, DIMACS dataset is about 12s.~~ (deprecated)
 * binpath_accelerated.c: accelerated by finding only from src to dst instead of all of the paths. Time run on i7-9750H, DIMACS dataset is about 5s.
 * binpath_clear.c: accelerated and removed all additional features such as `TRACKMEMORY`, easier to read.
-* binpath_accelerated_benchmark.c: CPU model name added and basic time track support.
+* binpath_accelerated_benchmark.c: CPU model name added and basic time track support. (along with more annotations)
 ## Preprocess the dataset
 We used DIMACS dataset, and in order to shorten the I/O time, changes are made to the dataset:
 
